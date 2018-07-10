@@ -15,16 +15,19 @@ public:
 	Socket();
 	virtual ~Socket() {}
 
-	int get_sock_fd() { return sock_; }
-	int get_sock_state() { return state_; }
+	int get_sock_fd() const { return sock_; }
+	void set_sock_fd(int fd) { sock_ = fd; }
+	int get_sock_state() const { return state_; }
 	void set_sock_state(int state) { state_ = state; }
 	void set_remote_ip(ipaddr_t ip) { remote_ip_ = ip; }
-	ipaddr_t get_remote_ip() { return remote_ip_; }
+	ipaddr_t get_remote_ip() const { return remote_ip_; }
 	void set_remote_port(port_t port) { remote_port_ = port; }
-	port_t get_remote_port() {return remote_port_; }
+	port_t get_remote_port() const {return remote_port_; }
 
+	bool IsValid() { return state_ != SS_INVALID; }
 	bool Create(int type, int protocol);
 	bool Bind(ipaddr_t ip, port_t port);
+	bool Close();
 
 private:
 	int sock_;

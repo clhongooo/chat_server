@@ -9,6 +9,7 @@
 #include<sys/types.h>
 #include<sys/socket.h>
 #include<arpa/inet.h>
+#include<unistd.h>
 
 Socket::Socket()
 	: sock_(INVALID_SOCKET)
@@ -38,4 +39,14 @@ bool Socket::Bind(ipaddr_t ip, port_t port)
 	addr.sin_port = port;
 	addr.sin_addr.s_addr = ip;
 	return bind(sock_, (struct sockaddr*)&addr, sizeof(addr)) == 0;
+}
+
+bool Socket::Close()
+{
+	if(close(sock_) != 0)
+	{
+		return false;
+	}
+	state_ = SS_CLOSED;
+	return true;
 }

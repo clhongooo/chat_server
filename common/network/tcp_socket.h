@@ -13,10 +13,10 @@ class TcpSocket : public Socket
 {
 public:
 	TcpSocket() {}
-	~TcpSocket() {}
+	TcpSocket(const TcpSocket& sock);
+	TcpSocket& operator=(const TcpSocket& sock);
+	virtual ~TcpSocket() {}
 
-	bool Listen(int backlog);
-	bool Accept();
 	bool Connect(ipaddr_t ip, port_t port);
 	int Recv(char* buf, int len);
 	int Send(const void* buf, int len);

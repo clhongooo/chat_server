@@ -10,43 +10,27 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 
-bool TcpSocket::Listen(int backlog)
+TcpSocket::TcpSocket(const TcpSocket& sock)
 {
-	if(listen(get_sock_fd(), backlog) == -1)
+	if(this != &sock)
 	{
-		return false;
+		set_sock_fd(sock.get_sock_fd());
+		set_sock_state(sock.get_sock_state());
+		set_remote_ip(sock.get_remote_ip());
+		set_remote_port(sock.get_remote_port());
 	}
-	set_sock_state(SS_LISTENING);
-	return true;
 }
 
-bool TcpSocket::Accept()
+TcpSocket& TcpSocket::operator=(const TcpSocket& sock)
 {
-	struct sockaddr_in addr;
-	socklen_t addr_len;
-	int fd = accept(get_sock_fd(), (struct sockaddr*)&addr, &addr_len);
-	if(fd == -1)
+	if(this != &sock)
 	{
-		return false;
+		set_sock_fd(sock.get_sock_fd());
+		set_sock_state(sock.get_sock_state());
+		set_remote_ip(sock.get_remote_ip());
+		set_remote_port(sock.get_remote_port());
 	}
-	
-	//TODO new sock
-	return true;
-}
-
-bool TcpSocket::Connect(ipaddr_t ip, port_t port)
-{
-	struct sockaddr_in addr;
-	addr.sin_family = AF_INET;
-	addr.sin_port = port;
-	addr.sin_addr.s_addr = ip;
-
-	if(connect(get_sock_fd(), (struct sockaddr*)&addr, sizeof(addr)) == -1)
-	{
-		return false;
-	}
-	set_sock_state(SS_CONNECTED);
-	return true;
+	return *this;
 }
 
 int TcpSocket::Recv(char* buf, int len)
