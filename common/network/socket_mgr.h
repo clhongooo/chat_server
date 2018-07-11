@@ -19,10 +19,10 @@ public:
 	SocketMgr();
 	~SocketMgr() {}
 
-	SocketMgr& Instance();
+	static SocketMgr& Instance();
 
-	void InsertSocket(shared_ptr<TcpSocket>& tsock);
-	void RemoveSocket(int sock_fd);
+	void InsertTcpSocket(shared_ptr<TcpSocket>& tsock);
+	void RemoveTcpSocket(int sock_fd);
 
 	void Update();
 	void CheckSocketEvent();

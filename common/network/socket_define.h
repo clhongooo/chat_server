@@ -21,6 +21,7 @@ typedef unsigned short port_t;
 
 #define MAX_RCV_BUF_LEN 1024 * 1024
 #define MAX_SND_BUF_LEN 1024 * 1024
+#define MAX_PKG_LEN	256 * 1024
 
 #define INVALID_SOCKET -1
 
@@ -28,7 +29,7 @@ typedef unsigned short port_t;
 #define SOCKET_EVENT_ON_WRITE 2
 #define SOCKET_EVENT_ON_EXCEPT 0x100000
 
-#define INIT_EVENT_VEC_SIZE 16
+#define INIT_EVENT_VEC_SIZE 16 
 
 enum SocketState
 {
@@ -38,6 +39,16 @@ enum SocketState
 	SS_CONNECTED,
 	SS_ACCEPTED = SS_CONNECTED,
 	SS_LISTENING,
+};
+
+enum SocketError
+{
+	SERROR_OK					=	0,
+	SERROR_SND_BUF_NULL			=	-1,
+	SERROR_PKG_TOO_BIG			=	-2,
+	SERROR_SND_FAILED			=	-3,
+	SERROR_SOCKET_STATE_ERROR	=	-4,
+	SERROR_RCV_TOO_SMALL		=	-5,
 };
 
 typedef map<int, shared_ptr<TcpSocket>> SocksMap;

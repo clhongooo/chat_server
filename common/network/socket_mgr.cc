@@ -20,7 +20,7 @@ SocketMgr& SocketMgr::Instance()
 	return socket_mgr;
 }
 
-void SocketMgr::InsertSocket(shared_ptr<TcpSocket>& tsock)
+void SocketMgr::InsertTcpSocket(shared_ptr<TcpSocket>& tsock)
 {
 	int sock_fd = tsock->get_sock_fd();
 	SocksMap::iterator iter = socks_map_.find(sock_fd);
@@ -30,7 +30,7 @@ void SocketMgr::InsertSocket(shared_ptr<TcpSocket>& tsock)
 	}
 }
 
-void SocketMgr::RemoveSocket(int sock_fd)
+void SocketMgr::RemoveTcpSocket(int sock_fd)
 {
 	SocksMap::iterator iter = socks_map_.find(sock_fd);
 	if(iter != socks_map_.end())

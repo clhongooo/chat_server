@@ -8,18 +8,28 @@
 #define TCP_SOCKET_H_
 
 #include<socket.h>
+#include<memory>
 
 class TcpSocket : public Socket
 {
 public:
-	TcpSocket() {}
+	TcpSocket();
 	TcpSocket(const TcpSocket& sock);
 	TcpSocket& operator=(const TcpSocket& sock);
 	virtual ~TcpSocket() {}
 
 	bool Connect(ipaddr_t ip, port_t port);
-	int Recv(char* buf, int len);
-	int Send(const void* buf, int len);
+	int Recv();
+	void RemovePkg(int pkg_len);
+	int Send(const char* buf, int len);
+
+private:
+	char rcv_buf_[MAX_RCV_BUF_LEN];	
+	int rcv_start_;
+	int rcv_bytes_len_;
+	
+	char snd_buf_[MAX_SND_BUF_LEN];
+	int cur_snd_size_;
 };
 
 #endif//TCP_SOCKET_H_
