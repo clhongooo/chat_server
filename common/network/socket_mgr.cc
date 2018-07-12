@@ -8,6 +8,7 @@
 #include<tcp_socket.h>
 #include<epoller.h>
 #include<socket_define.h>
+#include<tcp_svr_socket.h>
 
 SocketMgr::SocketMgr()
 {
@@ -68,24 +69,57 @@ void SocketMgr::CheckSocketEvent()
 		
 		if(event_flags & SOCKET_EVENT_ON_EXCEPT)
 		{
-			//TODO deal with close socket.
+			ProcessClose(*ts);
 			continue;
 		}
 		
 		if(ts->get_sock_state() == SS_LISTENING && (event_flags & SOCKET_EVENT_ON_READ))
 		{
-			//TODO deal with accept
+			TcpSvrSocket* tssock = dynamic_cast<TcpSvrSocket*>(ts.get());
+			if(tssock)
+			{
+				ProcessAccept(*tssock);
+			}
 			continue;
 		}
 
 		if(ts->get_sock_state() == SS_CONNECTED && (event_flags & SOCKET_EVENT_ON_READ))
 		{
-			//TODO deal with read
+			ProcessRead(*ts);
 		}
 
 		if(ts->get_sock_state() == SS_CONNECTED && (event_flags & SOCKET_EVENT_ON_WRITE))
 		{
-			//TODO deal with write
+			ProcessWrite(*ts);
 		}
 	}
+}
+
+void SocketMgr::ProcessClose(TcpSocket& ts)
+{
+	if(ts.Close())
+	{
+		int sock_fd = ts.get_sock_fd();
+		SocksMap::iterator iter = socks_map_.find(sock_fd);
+		if(iter != socks_map_.end())
+		{
+			socks_map_.erase(iter);
+		}
+	}
+}
+
+void SocketMgr::ProcessAccept(TcpSvrSocket& ts)
+{
+	ts.Accept();
+}
+
+void SocketMgr::ProcessRead(TcpSocket& ts)
+{
+	int bytes_len = ts.Recv();
+	ts.RemovePkg(bytes_len);
+}
+
+void SocketMgr::ProcessWrite(TcpSocket& ts)
+{
+
 }

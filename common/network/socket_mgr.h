@@ -12,6 +12,7 @@
 #include<memory>
 
 class TcpSocket;
+class TcpSvrSocket;
 
 class SocketMgr
 {
@@ -26,6 +27,12 @@ public:
 
 	void Update();
 	void CheckSocketEvent();
+
+private:
+	void ProcessClose(TcpSocket& ts);
+	void ProcessAccept(TcpSvrSocket& ts);
+	void ProcessRead(TcpSocket& ts);
+	void ProcessWrite(TcpSocket& ts);
 
 private:
 	SocksMap socks_map_;

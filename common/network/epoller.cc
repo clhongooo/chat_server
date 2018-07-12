@@ -90,6 +90,8 @@ bool Epoller::GetSocketEvent(int &sock_fd, int &event_flags)
 	}
 
 	epoll_event& evt = event_vec_[cur_evt_idx_];
+	cur_evt_idx_ += 1;
+
 	sock_fd = evt.data.fd;
 	if(evt.events & EPOLLERR)
 	{
