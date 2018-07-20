@@ -39,7 +39,7 @@ bool Epoller::RegisterEvent(TcpSocket& tsock, int event_flags)
 	}
 	else if(event_flags & SOCKET_EVENT_ON_WRITE)
 	{
-		evt.events | EPOLLOUT;
+		evt.events |= EPOLLOUT;
 	}
 	
 	if(epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, sock_fd, &evt) < 0
