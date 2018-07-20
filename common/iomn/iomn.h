@@ -3,7 +3,7 @@
 
 #include <pthread.h>
 
-pthread_t IomnStart(const char * socket_name, void (* start_func)(int));
+pthread_t IomnStart(const char * socket_name, void (* start_func)());
 
 int ListenOnLocalSocket(char * socket_name);
 
