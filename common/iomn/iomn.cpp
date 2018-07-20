@@ -14,11 +14,13 @@ void * IomnEntry(void * param);
 
 int g_conn_fd;
 char *g_write_buff;
+char* g_read_buff;
 int  g_dump_len = 0;
+int g_buff_size = 0;
 
-void (*g_start_func)(int);
+void (*g_start_func)();
 
-pthread_t IomnStart(const char * socket_name, void (* start_func)(int))
+pthread_t IomnStart(const char * socket_name, void (* start_func)())
 {
     g_start_func = start_func;
     pthread_t tid;
@@ -45,6 +47,9 @@ void IomnExit(pthread_t tid)
     if(tid <= 0) return;
 
     pthread_cancel(tid);
+	
+	free(g_read_buff);
+	free(g_write_buff);
 }
 
 
@@ -67,6 +72,11 @@ void * IomnEntry(void * param)
     g_write_buff = (char *)malloc(sizeof(char) * BUFF_SIZE);
     memset(g_write_buff, 0, BUFF_SIZE * sizeof(char));
 
+	g_read_buff = (char*)malloc(sizeof(char)*BUFF_SIZE);
+	memset(g_read_buff, 0, BUFF_SIZE*sizeof(char));
+
+	g_buff_size = BUFF_SIZE;
+
     while(1)
     {
         g_conn_fd = accept(listen_fd, (struct sockaddr*)&clt_addr, &len);
@@ -76,7 +86,7 @@ void * IomnEntry(void * param)
             continue;
         }
 
-        g_start_func(BUFF_SIZE);
+        g_start_func();
 
         printf("client quit, wait for another client\n");
         close(g_conn_fd);
