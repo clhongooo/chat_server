@@ -47,7 +47,7 @@ void SocketMgr::Update()
 
 void SocketMgr::CheckSocketEvent()
 {
-	if(!epoller_.WaitForEvent(10))
+	if(!epoller_.WaitForEvent(100))
 	{
 		return;
 	}

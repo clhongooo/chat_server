@@ -18,7 +18,6 @@ public:
 	TcpSocket& operator=(const TcpSocket& sock);
 	virtual ~TcpSocket() {}
 
-	bool Connect(ipaddr_t ip, port_t port);
 	int Recv();
 	void RemovePkg(int pkg_len);
 	int Send(const char* buf, int len);

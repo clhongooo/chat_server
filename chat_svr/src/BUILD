@@ -3,10 +3,12 @@ cc_binary(
     srcs = [
         'main.cpp',
     ],
-#    incs = [
-#        '../../thirdparty/glog/src/glog',
-#   ],
+    incs = [
+        '../../thirdparty/glog/src/glog',
+        '../../common/network',
+    ],
     deps = [
         '//thirdparty/glog/src:glog',
+        '//common/network:network',
     ],
 )

@@ -10,11 +10,13 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<socket_mgr.h>
+#include<logging.h>
 
 bool TcpSvrSocket::Listen(int backlog)
 {
 	if(listen(get_sock_fd(), backlog) == -1)
 	{
+		LOG(INFO) << "socket listen error!";
 		return false;
 	}
 	set_sock_state(SS_LISTENING);
@@ -28,6 +30,7 @@ bool TcpSvrSocket::Accept()
 	int conn_fd = accept(get_sock_fd(), (struct sockaddr*)&addr, &addr_len);
 	if(conn_fd == -1)
 	{
+		LOG(INFO) << "socket accpet error!";
 		return false;
 	}
 

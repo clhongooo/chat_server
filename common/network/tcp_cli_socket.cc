@@ -9,13 +9,14 @@
 #include<sys/types.h>
 #include<sys/socket.h>
 #include<arpa/inet.h>
+#include<netinet/in.h>
 
-bool TcpCliSocket::Connect(ipaddr_t ip, port_t port)
+bool TcpCliSocket::Connect(const char* str_ip, port_t port)
 {
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = port;
-	addr.sin_addr.s_addr = ip;
+	addr.sin_port = htons(port);
+	addr.sin_addr.s_addr = inet_addr(str_ip);
 
 	if(connect(get_sock_fd(), (struct sockaddr*)&addr, sizeof(addr)) == -1)
 	{

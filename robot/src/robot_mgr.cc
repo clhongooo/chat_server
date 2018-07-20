@@ -14,6 +14,17 @@ RobotMgr& RobotMgr::Instance()
 	return robot_mgr;
 }
 
+bool RobotMgr::CreateARobot()
+{
+	Robot robot;
+	if(robot.Connect())
+	{
+		robots_map_[robot.get_robot_id()] = make_shared<Robot>(robot);
+		return true;
+	}
+	return false;
+}
+
 int RobotMgr::CreateRobots(int robots_num)
 {
 	int count = 0;
@@ -45,3 +56,4 @@ void RobotMgr::CloseAllRobots()
 		item.second->Close();
 	}
 }
+

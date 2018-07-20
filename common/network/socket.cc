@@ -10,6 +10,7 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<unistd.h>
+#include<logging.h>
 
 Socket::Socket()
 	: sock_(INVALID_SOCKET)
@@ -25,10 +26,15 @@ bool Socket::Create(int type, int protocol)
 	int fd = socket(AF_INET, type, protocol);
 	if(fd == -1)
 	{
+		LOG(INFO) << "socket create error!";
 		return false;
 	}
+
+	LOG(INFO) << "socket create success!";
 	sock_ = fd;
 	state_ = SS_CREATED;
+	
+
 	return true;
 }
 
@@ -36,7 +42,7 @@ bool Socket::Bind(ipaddr_t ip, port_t port)
 {
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = port;
+	addr.sin_port = htons(port);
 	addr.sin_addr.s_addr = ip;
 	return bind(sock_, (struct sockaddr*)&addr, sizeof(addr)) == 0;
 }

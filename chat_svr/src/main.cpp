@@ -4,20 +4,34 @@
 	> Mail: clhongooo@163.com 
 	> Created Time: Tue 03 Jul 2018 04:12:51 PM CST
  ************************************************************************/
-#include <sys/ptrace.h>
-//#include <libunwind.h>
-#include <libunwind-x86_64.h>
-#include <libunwind-ptrace.h>
-
-#include<iostream>
 #include<logging.h>
+#include<tcp_svr_socket.h>
+#include<netinet/in.h>
+#include<memory>
+#include<socket_mgr.h>
+#include<unistd.h>
 
-using namespace std;
-
-int main()
+int main(int argc, char* argv[])
 {
-	cout << "hello world!\n";
-	google::InitGoogleLogging("chat_svr_log");
-	LOG(INFO) << "test glog!";
+	google::InitGoogleLogging(argv[0]);
+	google::ParseCommandLineFlags(&argc, &argv, true);
+	
+	LOG(INFO) << "chat server start";
+	TcpSvrSocket tssock;
+	tssock.Create(SOCK_STREAM, 0);
+	tssock.Bind(INADDR_ANY, 5000);
+	tssock.Listen(1000);
+
+	shared_ptr<TcpSocket> sp_sock = make_shared<TcpSvrSocket>(tssock);
+	SocketMgr::Instance().InsertTcpSocket(sp_sock);
+	
+	daemon(1, 1);
+
+	while(true)
+	{
+		sleep(1);
+		//SocketMgr::Instance().Update();
+	}
+
 	return 0;
 }

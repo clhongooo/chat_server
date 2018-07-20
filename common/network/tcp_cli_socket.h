@@ -15,7 +15,7 @@ public:
 	TcpCliSocket() {}
 	~TcpCliSocket() {}
 
-	bool Connect(ipaddr_t ip, port_t port);
+	bool Connect(const char* str_ip, port_t port);
 };
 
 #endif//TCP_CLI_SOCKET_H_

@@ -17,6 +17,7 @@ public:
 
 	static RobotMgr& Instance();
 
+	bool CreateARobot();
 	int CreateRobots(int robots_num);
 	void CloseRobot(int robot_id);
 	void CloseAllRobots();
