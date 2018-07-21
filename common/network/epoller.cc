@@ -20,9 +20,9 @@ Epoller::Epoller()
 
 }
 
-bool Epoller::RegisterEvent(TcpSocket& tsock, int event_flags)
+bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 {
-	if(!tsock.IsValid())
+	if(!spsock->IsValid())
 	{
 		return false;
 	}
@@ -30,7 +30,7 @@ bool Epoller::RegisterEvent(TcpSocket& tsock, int event_flags)
 	struct epoll_event evt;
 	memset(&evt, 0, sizeof(evt));
 
-	int sock_fd = tsock.get_sock_fd();
+	int sock_fd = spsock->get_sock_fd();
 	evt.data.fd = sock_fd;
 	evt.events = EPOLLHUP | EPOLLERR;
 	if(event_flags & SOCKET_EVENT_ON_READ)
@@ -50,9 +50,9 @@ bool Epoller::RegisterEvent(TcpSocket& tsock, int event_flags)
 	return true;
 }
 
-bool Epoller::UnRegisterEvent(TcpSocket& tsock)
+bool Epoller::UnRegisterEvent(shared_ptr<TcpSocket>& spsock)
 {
-	if(!tsock.IsValid())
+	if(!spsock->IsValid())
 	{
 		return false;
 	}
@@ -60,7 +60,7 @@ bool Epoller::UnRegisterEvent(TcpSocket& tsock)
 	struct epoll_event evt;
 	memset(&evt, 0, sizeof(evt));
 
-	int sock_fd = tsock.get_sock_fd();
+	int sock_fd = spsock->get_sock_fd();
 	evt.data.fd = sock_fd;
 
 	if(epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, sock_fd, &evt) < 0)

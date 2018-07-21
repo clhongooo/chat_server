@@ -9,7 +9,7 @@
 #include<stdlib.h>
 #include<robot_mgr.h>
 
-extern char* g_read_buffer;
+extern char* g_read_buff;
 extern int g_buff_size;
 
 void TopIomnMenu();
@@ -62,7 +62,7 @@ void TopIomnMenu()
 
 void DumpCreateRobot()
 {
-	iomn_print("Input number to create robot:");
+	iomn_print("Input number to create robot:\n");
 	
 	char *cmd = iomn_gets(g_read_buff, g_buff_size);
 	if(cmd == NULL) return;
@@ -74,17 +74,17 @@ void DumpCreateRobot()
 	{
 		if(RobotMgr::Instance().CreateARobot())
 		{
-			iomn_print("create %d robot success!", i);
+			iomn_print("create %d robot success!\n", i);
 		}
 		else
 		{
-			iomn_print("create %d robot failed!", i);
+			iomn_print("create %d robot failed!\n", i);
 		}
 	}
 }
 
 void DumpDisCloseRobot()
 {
-	iomn_print("Close all robots");
+	iomn_print("Close all robots\n");
 	RobotMgr::Instance().CloseAllRobots();
 }

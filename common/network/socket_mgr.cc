@@ -28,6 +28,7 @@ void SocketMgr::InsertTcpSocket(shared_ptr<TcpSocket>& tsock)
 	if(iter == socks_map_.end())
 	{
 		socks_map_[sock_fd] = tsock;
+		epoller_.RegisterEvent(tsock, SOCKET_EVENT_ON_READ & SOCKET_EVENT_ON_WRITE);
 	}
 }
 
@@ -36,9 +37,10 @@ void SocketMgr::RemoveTcpSocket(int sock_fd)
 	SocksMap::iterator iter = socks_map_.find(sock_fd);
 	if(iter != socks_map_.end())
 	{
+		epoller_.UnRegisterEvent(iter->second);
 		socks_map_.erase(iter);
 	}
-}
+}	
 
 void SocketMgr::Update()
 {
@@ -97,7 +99,7 @@ void SocketMgr::CheckSocketEvent()
 
 void SocketMgr::ProcessClose(TcpSocket& ts)
 {
-	if(ts.Close())
+	if(ts.Shutdown(2))
 	{
 		int sock_fd = ts.get_sock_fd();
 		SocksMap::iterator iter = socks_map_.find(sock_fd);
