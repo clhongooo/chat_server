@@ -53,3 +53,14 @@ bool Socket::Close()
 	state_ = SS_CLOSED;
 	return true;
 }
+
+bool Socket::Shutdown(int how)
+{
+	if(shutdown(sock_, how) != 0)
+	{
+		return false;
+	}
+
+	state_ = SS_CLOSED;
+	return true;
+}

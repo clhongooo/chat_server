@@ -33,7 +33,7 @@ bool Robot::Connect()
 
 bool Robot::Close()
 {
-	if(tcsock_.Close())
+	if(tcsock_.Shutdown(SHUT_WR))
 	{
 		return true;
 	}

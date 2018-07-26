@@ -41,7 +41,7 @@ void SocketMgr::RemoveTcpSocket(int sock_fd)
 		epoller_.UnRegisterEvent(iter->second);
 		socks_map_.erase(iter);
 	}
-}
+}	
 
 void SocketMgr::Update()
 {
@@ -100,7 +100,7 @@ void SocketMgr::CheckSocketEvent()
 
 void SocketMgr::ProcessClose(TcpSocket& ts)
 {
-	if(ts.Close())
+	if(ts.Shutdown(2))
 	{
 		int sock_fd = ts.get_sock_fd();
 		SocksMap::iterator iter = socks_map_.find(sock_fd);

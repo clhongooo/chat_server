@@ -5,7 +5,10 @@ cc_library(
         'gflags_reporting.cc',
         'gflags_completions.cc',
     ],
-    incs = '.',
+    incs = [
+        '.',
+        '../build/include/gflags',
+    ],
     deps = '#pthread',
     warning = 'no'
 )

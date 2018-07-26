@@ -28,6 +28,7 @@ public:
 	bool Create(int type, int protocol);
 	bool Bind(ipaddr_t ip, port_t port);
 	bool Close();
+	bool Shutdown(int how);
 
 private:
 	int sock_;

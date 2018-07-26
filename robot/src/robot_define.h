@@ -14,8 +14,11 @@
 using namespace std;
 
 class Robot;
-#define CHAT_SVR_IP "192.168.2.13"
+#define CHAT_SVR_IP "127.0.0.1"
 #define CHAT_SVR_PORT 5000
 
 typedef map<int, shared_ptr<Robot>> RobotsMap;
+
+#define ROBOT_SVR_NAME "@iomn_robotsvr"
+
 #endif//ROBOT_DEFINE_H_
