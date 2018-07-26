@@ -9,6 +9,7 @@
 #include<epoller.h>
 #include<socket_define.h>
 #include<tcp_svr_socket.h>
+#include<logging.h>
 
 SocketMgr::SocketMgr()
 {
@@ -21,13 +22,14 @@ SocketMgr& SocketMgr::Instance()
 	return socket_mgr;
 }
 
-void SocketMgr::InsertTcpSocket(shared_ptr<TcpSocket>& tsock)
+void SocketMgr::InsertTcpSocket(shared_ptr<TcpSocket>& sptsock, int event_flags)
 {
-	int sock_fd = tsock->get_sock_fd();
+	int sock_fd = sptsock->get_sock_fd();
 	SocksMap::iterator iter = socks_map_.find(sock_fd);
 	if(iter == socks_map_.end())
 	{
-		socks_map_[sock_fd] = tsock;
+		socks_map_[sock_fd] = sptsock;
+		epoller_.RegisterEvent(sptsock, event_flags);
 	}
 }
 
@@ -36,6 +38,7 @@ void SocketMgr::RemoveTcpSocket(int sock_fd)
 	SocksMap::iterator iter = socks_map_.find(sock_fd);
 	if(iter != socks_map_.end())
 	{
+		epoller_.UnRegisterEvent(iter->second);
 		socks_map_.erase(iter);
 	}
 }

@@ -16,7 +16,6 @@ bool TcpSvrSocket::Listen(int backlog)
 {
 	if(listen(get_sock_fd(), backlog) == -1)
 	{
-		LOG(INFO) << "socket listen error!";
 		return false;
 	}
 	set_sock_state(SS_LISTENING);
@@ -30,7 +29,6 @@ bool TcpSvrSocket::Accept()
 	int conn_fd = accept(get_sock_fd(), (struct sockaddr*)&addr, &addr_len);
 	if(conn_fd == -1)
 	{
-		LOG(INFO) << "socket accpet error!";
 		return false;
 	}
 
@@ -38,7 +36,7 @@ bool TcpSvrSocket::Accept()
 	tssock.set_sock_fd(conn_fd);
 	tssock.set_sock_state(SS_CONNECTED);
 	shared_ptr<TcpSocket> sp_sock = make_shared<TcpSvrSocket>(tssock);
-	SocketMgr::Instance().InsertTcpSocket(sp_sock);	
+	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);	
 	return true;
 }
 

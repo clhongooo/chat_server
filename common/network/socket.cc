@@ -26,14 +26,11 @@ bool Socket::Create(int type, int protocol)
 	int fd = socket(AF_INET, type, protocol);
 	if(fd == -1)
 	{
-		LOG(INFO) << "socket create error!";
 		return false;
 	}
 
-	LOG(INFO) << "socket create success!";
 	sock_ = fd;
 	state_ = SS_CREATED;
-	
 
 	return true;
 }

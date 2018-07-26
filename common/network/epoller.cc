@@ -12,7 +12,7 @@
 #include<socket_define.h>
 
 Epoller::Epoller()
-	: epoll_fd_(epoll_create(EPOLL_CLOEXEC))
+	: epoll_fd_(epoll_create(1024))
 	, event_vec_(INIT_EVENT_VEC_SIZE)
 	, evt_num_(0)
 	, cur_evt_idx_(0)
@@ -20,9 +20,9 @@ Epoller::Epoller()
 
 }
 
-bool Epoller::RegisterEvent(TcpSocket& tsock, int event_flags)
+bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& sptsock, int event_flags)
 {
-	if(!tsock.IsValid())
+	if(!sptsock->IsValid())
 	{
 		return false;
 	}
@@ -30,9 +30,9 @@ bool Epoller::RegisterEvent(TcpSocket& tsock, int event_flags)
 	struct epoll_event evt;
 	memset(&evt, 0, sizeof(evt));
 
-	int sock_fd = tsock.get_sock_fd();
+	int sock_fd = sptsock->get_sock_fd();
 	evt.data.fd = sock_fd;
-	evt.events = EPOLLHUP | EPOLLERR;
+	evt.events = EPOLLRDHUP;
 	if(event_flags & SOCKET_EVENT_ON_READ)
 	{
 		evt.events |= EPOLLIN;
@@ -42,17 +42,26 @@ bool Epoller::RegisterEvent(TcpSocket& tsock, int event_flags)
 		evt.events | EPOLLOUT;
 	}
 	
-	if(epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, sock_fd, &evt) < 0
-		|| epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, sock_fd, &evt) < 0)
+	if(epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, sock_fd, &evt) == 0)
 	{
-		return false;
+		return true;
 	}
+	
+	if(errno == ENOENT)
+	{
+		if(epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, sock_fd, &evt) < 0)
+		{
+			return false;
+		}	
+	}
+
+	printf("epoll_ctl success! epoll_fd:%d, sock:%d\n", epoll_fd_, sptsock->get_sock_fd());
 	return true;
 }
 
-bool Epoller::UnRegisterEvent(TcpSocket& tsock)
+bool Epoller::UnRegisterEvent(shared_ptr<TcpSocket>& sptsock)
 {
-	if(!tsock.IsValid())
+	if(!sptsock->IsValid())
 	{
 		return false;
 	}
@@ -60,7 +69,7 @@ bool Epoller::UnRegisterEvent(TcpSocket& tsock)
 	struct epoll_event evt;
 	memset(&evt, 0, sizeof(evt));
 
-	int sock_fd = tsock.get_sock_fd();
+	int sock_fd = sptsock->get_sock_fd();
 	evt.data.fd = sock_fd;
 
 	if(epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, sock_fd, &evt) < 0)
@@ -73,6 +82,11 @@ bool Epoller::UnRegisterEvent(TcpSocket& tsock)
 bool Epoller::WaitForEvent(int timeout)
 {
 	evt_num_ = epoll_wait(epoll_fd_, &(*event_vec_.begin()), static_cast<int>(event_vec_.size()), timeout);
+	if(evt_num_ <= 0)
+	{
+		return false;
+	}
+
 	if(evt_num_ == static_cast<int>(event_vec_.size()))
 	{
 		event_vec_.resize(evt_num_*2);
@@ -93,15 +107,17 @@ bool Epoller::GetSocketEvent(int &sock_fd, int &event_flags)
 	cur_evt_idx_ += 1;
 
 	sock_fd = evt.data.fd;
-	if(evt.events & EPOLLERR)
+	if(evt.events & (EPOLLERR | EPOLLRDHUP))
 	{
 		event_flags |= SOCKET_EVENT_ON_EXCEPT;
 	}
-	else if(evt.events & EPOLLIN)
+	
+	if(evt.events & EPOLLIN)
 	{
 		event_flags |= SOCKET_EVENT_ON_READ;
 	}
-	else if(evt.events & EPOLLOUT)
+	
+	if(evt.events & EPOLLOUT)
 	{
 		event_flags |= SOCKET_EVENT_ON_WRITE;
 	}

@@ -22,7 +22,7 @@ public:
 
 	static SocketMgr& Instance();
 
-	void InsertTcpSocket(shared_ptr<TcpSocket>& tsock);
+	void InsertTcpSocket(shared_ptr<TcpSocket>& tsock, int event_flags);
 	void RemoveTcpSocket(int sock_fd);
 
 	void Update();

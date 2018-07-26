@@ -58,13 +58,11 @@ int TcpSocket::Recv()
 {
 	if(get_sock_state() != SS_CONNECTED)
 	{
-		LOG(ERROR) << "socket state is error!";
 		return SERROR_SOCKET_STATE_ERROR;
 	}
 
 	if(rcv_start_ + rcv_bytes_len_ > MAX_RCV_BUF_LEN)
 	{
-		LOG(ERROR) << "recv buffer is not enough!";
 		return SERROR_RCV_TOO_SMALL;
 	}
 
@@ -104,19 +102,16 @@ int TcpSocket::Send(const char* buf, int len)
 {
 	if(buf == NULL)
 	{
-		LOG(ERROR) << "send buffer is null!";
 		return SERROR_SND_BUF_NULL;
 	}
 
 	if(len > MAX_PKG_LEN)
 	{
-		LOG(ERROR) << "send package is too small!";
 		return SERROR_PKG_TOO_BIG;
 	}
 
 	if(get_sock_state() != SS_CONNECTED)
 	{
-		LOG(ERROR) << "socket state is error!";
 		return SERROR_SOCKET_STATE_ERROR;
 	}
 
@@ -125,7 +120,6 @@ int TcpSocket::Send(const char* buf, int len)
 		int snd_size = send(get_sock_fd(), snd_buf_, cur_snd_size_, 0);
 		if(snd_size < 0)
 		{
-			LOG(ERROR) << "send data failed";
 			return SERROR_SND_FAILED;
 		}
 		cur_snd_size_ = 0;
@@ -133,7 +127,6 @@ int TcpSocket::Send(const char* buf, int len)
 		snd_size = send(get_sock_fd(), buf, len, 0);
 		if(snd_size < 0)
 		{
-			LOG(ERROR) << "send data failed";
 			return SERROR_SND_FAILED;
 		}
 
