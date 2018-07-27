@@ -15,6 +15,7 @@ void * IomnEntry(void * param);
 int g_conn_fd;
 char *g_write_buff;
 char* g_read_buff;
+char* g_dump_buff;
 int  g_dump_len = 0;
 int g_buff_size = 0;
 
@@ -50,6 +51,7 @@ void IomnExit(pthread_t tid)
 	
 	free(g_read_buff);
 	free(g_write_buff);
+	free(g_dump_buff);
 }
 
 
@@ -74,6 +76,9 @@ void * IomnEntry(void * param)
 
 	g_read_buff = (char*)malloc(sizeof(char)*BUFF_SIZE);
 	memset(g_read_buff, 0, BUFF_SIZE*sizeof(char));
+
+	g_dump_buff = (char*)malloc(sizeof(char)*BUFF_SIZE);
+	memset(g_dump_buff, 0, BUFF_SIZE*sizeof(char));
 
 	g_buff_size = BUFF_SIZE;
 

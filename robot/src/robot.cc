@@ -41,3 +41,10 @@ bool Robot::Close()
 	LOG(ERROR) << "robot[id:%d] close failed!" << robot_id_;
 	return false;
 }
+
+int Robot::DumpRobotInfo(char* buffer, int buff_len)
+{
+	int len = 0;
+	len += snprintf(buffer+len, buff_len-len, "robot id:%d\n", robot_id_);
+	return len;
+}

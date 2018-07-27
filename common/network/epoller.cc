@@ -55,7 +55,6 @@ bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 		}	
 	}
 
-	printf("epoll_ctl success! epoll_fd:%d, sock:%d\n", epoll_fd_, sptsock->get_sock_fd());
 	return true;
 }
 

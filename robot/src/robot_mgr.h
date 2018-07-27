@@ -22,6 +22,17 @@ public:
 	void CloseRobot(int robot_id);
 	void CloseAllRobots();
 
+	int DumpRobotsInfo(char* buffer, int buff_len);
+
+	template<typename Funcation>
+	void for_each_robot(Funcation func)
+	{
+		for(auto& item : robots_map_)
+		{
+			func(*(item.second.get()));
+		}
+	}
+
 private:
 	RobotsMap robots_map_;
 };

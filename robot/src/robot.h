@@ -20,6 +20,8 @@ public:
 	bool Connect();
 	bool Close();
 
+	int DumpRobotInfo(char* buffer, int buff_len);
+
 private:
 	TcpCliSocket tcsock_;
 	int robot_id_;

@@ -51,9 +51,18 @@ void RobotMgr::CloseRobot(int robot_id)
 
 void RobotMgr::CloseAllRobots()
 {
-	for(auto item : robots_map_)
+	for(auto& item : robots_map_)
 	{
 		item.second->Close();
 	}
 }
 
+int RobotMgr::DumpRobotsInfo(char* buffer, int buff_len)
+{
+	int len = 0;
+	for(auto& item : robots_map_)
+	{
+		len += item.second->DumpRobotInfo(buffer+len, buff_len-len);
+	}
+	return len;
+}

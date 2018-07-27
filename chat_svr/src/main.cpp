@@ -23,14 +23,13 @@ int main(int argc, char* argv[])
 	tssock.Listen(1000);
 
 	shared_ptr<TcpSocket> sp_sock = make_shared<TcpSvrSocket>(tssock);
-	SocketMgr::Instance().InsertTcpSocket(sp_sock);
+	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ);
 
 	daemon(1, 1);
 
 	while(true)
 	{
 		SocketMgr::Instance().Update();
-		sleep(1);
 	}
 
 	return 0;
