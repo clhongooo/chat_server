@@ -27,6 +27,7 @@ void PrintTopMenuHelp()
 	iomn_push("c) create robot\n");
 	iomn_push("d) disclose robot\n");
 	iomn_push("s) show robots\n");
+	iomn_push("r) close assigned robot\n");
 
 	iomn_push("q) Quit\n");
 	iomn_print("Input your select:\n");
@@ -105,14 +106,8 @@ struct tagPrintCloseRobot
 	{
 		if(robot_id_ == robot.get_robot_id())
 		{
-			if(robot.Close())
-			{
-				iomn_print("robot[id:%d] closes successfully!\n", robot_id_);
-			}
-			else
-			{
-				iomn_print("robot[id:%d] closes failly!\n", robot_id_);
-			}
+			RobotMgr::Instance().CloseRobot(robot_id_);
+			iomn_print("robot[id:%d] closes successfully!\n", robot_id_);
 		}
 		return 0;
 	}

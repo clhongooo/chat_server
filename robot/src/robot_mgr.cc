@@ -46,6 +46,7 @@ void RobotMgr::CloseRobot(int robot_id)
 	if(iter != robots_map_.end())
 	{
 		iter->second->Close();
+		robots_map_.erase(iter);
 	}
 }
 
@@ -55,6 +56,7 @@ void RobotMgr::CloseAllRobots()
 	{
 		item.second->Close();
 	}
+	robots_map_.clear();
 }
 
 int RobotMgr::DumpRobotsInfo(char* buffer, int buff_len)
