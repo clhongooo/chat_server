@@ -63,7 +63,7 @@ void * message_writer(void * param)
 void print_usage()
 {
     printf("Usage: diag_menu svrname\n");
-    printf("Available svrname: zone, conn, accs, dirs, dba, gm, name\n");
+    printf("Available svrname: robot\n");
 }
 
 const char * select_socket_name(const char * param)
