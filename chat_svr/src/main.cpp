@@ -10,17 +10,29 @@
 #include<memory>
 #include<socket_mgr.h>
 #include<unistd.h>
+#include<signal.h>
+
+void ProcessSignal()
+{
+	signal(SIGHUP, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGTTOU, SIG_IGN);
+	signal(SIGTTIN, SIG_IGN);
+	signal(SIGCHLD, SIG_IGN);
+}
 
 int main(int argc, char* argv[])
 {
 	google::InitGoogleLogging(argv[0]);
 	google::ParseCommandLineFlags(&argc, &argv, true);
-	
+
+	ProcessSignal();
+
 	LOG(INFO) << "chat server start";
 	TcpSvrSocket tssock;
 	tssock.Create(SOCK_STREAM, 0);
 	tssock.Bind(INADDR_ANY, 5000);
-	tssock.Listen(1000);
+	tssock.Listen(5000);
 
 	shared_ptr<TcpSocket> sp_sock = make_shared<TcpSvrSocket>(tssock);
 	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ);

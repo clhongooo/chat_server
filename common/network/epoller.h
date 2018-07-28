@@ -16,7 +16,7 @@ class Epoller
 {
 public:
 	Epoller();
-	~Epoller() {}
+	~Epoller();
 
 	/**
 	 * \brief register events on the epoll file descriptor.

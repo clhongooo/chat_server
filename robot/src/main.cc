@@ -9,13 +9,25 @@
 #include<iomn.h>
 #include<robot_define.h>
 #include<logging.h>
+#include<signal.h>
 
 extern void TopIomnMenu();
+
+void ProcessSignal()
+{
+	signal(SIGHUP, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGTTOU, SIG_IGN);
+	signal(SIGTTIN, SIG_IGN);
+	signal(SIGCHLD, SIG_IGN);
+}
 
 int main(int argc, char* argv[])
 {
 	google::InitGoogleLogging(argv[0]);
 	google::ParseCommandLineFlags(&argc, &argv, true);
+
+	ProcessSignal();
 
 	LOG(INFO) << "robot server start";
 
@@ -25,7 +37,7 @@ int main(int argc, char* argv[])
 	
 	while(true)
 	{
-		sleep(1);
+		usleep(10);
 	}
 	return 0;
 }

@@ -100,7 +100,7 @@ void SocketMgr::CheckSocketEvent()
 
 void SocketMgr::ProcessClose(TcpSocket& ts)
 {
-	if(ts.Shutdown(2))
+	if(ts.Close())
 	{
 		int sock_fd = ts.get_sock_fd();
 		SocksMap::iterator iter = socks_map_.find(sock_fd);
@@ -118,8 +118,7 @@ void SocketMgr::ProcessAccept(TcpSvrSocket& ts)
 
 void SocketMgr::ProcessRead(TcpSocket& ts)
 {
-	int bytes_len = ts.Recv();
-	ts.RemovePkg(bytes_len);
+
 }
 
 void SocketMgr::ProcessWrite(TcpSocket& ts)

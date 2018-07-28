@@ -8,6 +8,8 @@
 #include<robot_mgr.h>
 #include<robot.h>
 
+static int count = 0;
+
 RobotMgr& RobotMgr::Instance()
 {
 	static RobotMgr robot_mgr;
@@ -20,6 +22,7 @@ bool RobotMgr::CreateARobot()
 	if(robot.Connect())
 	{
 		robots_map_[robot.get_robot_id()] = make_shared<Robot>(robot);
+		count++;
 		return true;
 	}
 	return false;
