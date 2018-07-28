@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: main.cc
 	> Author: clhongooo
-	> Mail: clhongooo@163.com 
+	> Mail: clhongooo@163.com
 	> Created Time: 2018年07月20日 星期五 23时20分57秒
  ************************************************************************/
 
@@ -22,6 +22,10 @@ void ProcessSignal()
 	signal(SIGCHLD, SIG_IGN);
 }
 
+namespace google {
+uint32 ParseCommandLineFlags(int* argc, char*** argv, bool remove_flags);
+}
+
 int main(int argc, char* argv[])
 {
 	google::InitGoogleLogging(argv[0]);
@@ -31,10 +35,10 @@ int main(int argc, char* argv[])
 
 	LOG(INFO) << "robot server start";
 
-	daemon(1, 1);
+	// daemon(1, 1);
 
 	IomnStart(ROBOT_SVR_NAME, TopIomnMenu);
-	
+
 	while(true)
 	{
 		usleep(10);

@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: robot_mgr.cc
 	> Author: clhongooo
-	> Mail: clhongooo@163.com 
+	> Mail: clhongooo@163.com
 	> Created Time: Thu 19 Jul 2018 03:43:20 PM CST
  ************************************************************************/
 
@@ -24,6 +24,9 @@ bool RobotMgr::CreateARobot()
 		robots_map_[robot.get_robot_id()] = make_shared<Robot>(robot);
 		count++;
 		return true;
+	}
+	else {
+	    fprintf(stderr, "robot is not connect\n");
 	}
 	return false;
 }

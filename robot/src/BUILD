@@ -9,6 +9,7 @@ cc_binary(
     incs = [
         '.',
         '../../thirdparty/glog/src/glog',
+        '../../thirdparty/glog/src',
         '../../common/network',
         '../../common/iomn',
     ],

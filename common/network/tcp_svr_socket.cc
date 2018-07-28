@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: tcp_svr_socket.cc
 	> Author: clhongooo
-	> Mail: clhongooo@163.com 
+	> Mail: clhongooo@163.com
 	> Created Time: Tue 10 Jul 2018 05:19:38 PM CST
  ************************************************************************/
 
@@ -26,17 +26,18 @@ bool TcpSvrSocket::Accept()
 {
 	struct sockaddr_in addr;
 	socklen_t addr_len;
+	fprintf(stderr, "accepting...");
 	int conn_fd = accept(get_sock_fd(), (struct sockaddr*)&addr, &addr_len);
 	if(conn_fd == -1)
 	{
 		return false;
 	}
+	fprintf(stderr, "accepted...");
 
 	TcpSvrSocket tssock;
 	tssock.set_sock_fd(conn_fd);
 	tssock.set_sock_state(SS_CONNECTED);
 	shared_ptr<TcpSocket> sp_sock = make_shared<TcpSvrSocket>(tssock);
-	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);	
+	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
 	return true;
 }
-

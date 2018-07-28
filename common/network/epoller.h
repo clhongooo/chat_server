@@ -16,7 +16,7 @@ class Epoller
 {
 public:
 	Epoller();
-	~Epoller();
+	~Epoller() {};
 
 	/**
 	 * \brief register events on the epoll file descriptor.
@@ -25,7 +25,7 @@ public:
 	 * \return register successilly or not.
 	 */
 	bool RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags);
-	
+
 	bool UnRegisterEvent(shared_ptr<TcpSocket>& spsock);
 	bool WaitForEvent(int timeout);
 	bool GetSocketEvent(int& sock_fd, int& event_flags);

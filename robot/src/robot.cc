@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: robot.cc
 	> Author: clhongooo
-	> Mail: clhongooo@163.com 
+	> Mail: clhongooo@163.com
 	> Created Time: Thu 19 Jul 2018 03:43:03 PM CST
  ************************************************************************/
 
@@ -22,13 +22,20 @@ Robot::Robot()
 
 bool Robot::Connect()
 {
-	if(tcsock_.IsValid() && tcsock_.Connect(CHAT_SVR_IP, CHAT_SVR_PORT))
-	{
-		return true;
+	if(!tcsock_.IsValid()) {
+		fprintf(stderr, "tcsock is invalid\n");
+		return false;
 	}
 
-	LOG(ERROR) << "robot connects to chat server failed!";
-	return false;
+	if(!tcsock_.Connect(CHAT_SVR_IP, CHAT_SVR_PORT))
+	{
+		fprintf(stderr, "robot connects to chat server failed!");
+		return false;
+	}
+
+	// fprintf(stderr, "robot connects to chat server failed!");
+	// LOG(ERROR) << "robot connects to chat server failed!";
+	return true;
 }
 
 bool Robot::Close()

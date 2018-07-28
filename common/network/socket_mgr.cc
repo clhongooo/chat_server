@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: socket_mgr.cc
 	> Author: clhongooo
-	> Mail: clhongooo@163.com 
+	> Mail: clhongooo@163.com
 	> Created Time: Fri 06 Jul 2018 08:06:31 PM CST
  ************************************************************************/
 #include<socket_mgr.h>
@@ -41,7 +41,7 @@ void SocketMgr::RemoveTcpSocket(int sock_fd)
 		epoller_.UnRegisterEvent(iter->second);
 		socks_map_.erase(iter);
 	}
-}	
+}
 
 void SocketMgr::Update()
 {
@@ -50,11 +50,12 @@ void SocketMgr::Update()
 
 void SocketMgr::CheckSocketEvent()
 {
-	if(!epoller_.WaitForEvent(100))
+	if(!epoller_.WaitForEvent(2000))
 	{
 		return;
 	}
 
+	fprintf(stderr, "get_sock_evt()");
 	int sock_fd = 0, event_flags = 0;
 	while(epoller_.GetSocketEvent(sock_fd, event_flags))
 	{
@@ -63,19 +64,19 @@ void SocketMgr::CheckSocketEvent()
 		{
 			continue;
 		}
-		
+
 		shared_ptr<TcpSocket>& ts = iter->second;
 		if(!ts->IsValid() || ts->get_sock_state() == SS_INVALID)
 		{
 			continue;
 		}
-		
+
 		if(event_flags & SOCKET_EVENT_ON_EXCEPT)
 		{
 			ProcessClose(*ts);
 			continue;
 		}
-		
+
 		if(ts->get_sock_state() == SS_LISTENING && (event_flags & SOCKET_EVENT_ON_READ))
 		{
 			TcpSvrSocket* tssock = dynamic_cast<TcpSvrSocket*>(ts.get());

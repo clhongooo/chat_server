@@ -11,6 +11,7 @@ cc_library(
     incs = [
         '.',
         '../../thirdparty/glog/src/glog',
+        '../../thirdparty/glog/src',
     ],
     deps = [
         '//thirdparty/glog/src:glog'

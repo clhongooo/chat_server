@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: robot_iomn.cc
 	> Author: clhongooo
-	> Mail: clhongooo@163.com 
+	> Mail: clhongooo@163.com
 	> Created Time: Thu 19 Jul 2018 05:27:05 PM CST
  ************************************************************************/
 
@@ -75,21 +75,24 @@ void TopIomnMenu()
 void DumpCreateRobot()
 {
 	iomn_print("Input number to create robot:\n");
-	
+
 	char *cmd = iomn_gets(g_read_buff, g_buff_size);
 	if(cmd == NULL) return;
 
 	int count = atoi(cmd);
 	if(count <= 0) return;
+	printf("count = %d\n", count);
 
 	for(int i = 0; i < count; i++)
 	{
 		if(RobotMgr::Instance().CreateARobot())
 		{
+			printf("create %d robot success!\n", i);
 			iomn_print("create %d robot success!\n", i);
 		}
 		else
 		{
+			printf("create %d robot failed!\n", i);
 			iomn_print("create %d robot failed!\n", i);
 		}
 	}

@@ -1,7 +1,7 @@
 /*************************************************************************
 	> File Name: epoller.cc
 	> Author: clhongooo
-	> Mail: clhongooo@163.com 
+	> Mail: clhongooo@163.com
 	> Created Time: Mon 09 Jul 2018 11:23:48 AM CST
  ************************************************************************/
 
@@ -41,18 +41,18 @@ bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 	{
 		evt.events |= EPOLLOUT;
 	}
-	
+
 	if(epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, sock_fd, &evt) == 0)
 	{
 		return true;
 	}
-	
+
 	if(errno == ENOENT)
 	{
 		if(epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, sock_fd, &evt) < 0)
 		{
 			return false;
-		}	
+		}
 	}
 
 	return true;
@@ -91,7 +91,7 @@ bool Epoller::WaitForEvent(int timeout)
 		event_vec_.resize(evt_num_*2);
 	}
 	cur_evt_idx_= 0;
-	
+
 	return true;
 }
 
@@ -110,12 +110,12 @@ bool Epoller::GetSocketEvent(int &sock_fd, int &event_flags)
 	{
 		event_flags |= SOCKET_EVENT_ON_EXCEPT;
 	}
-	
+
 	if(evt.events & EPOLLIN)
 	{
 		event_flags |= SOCKET_EVENT_ON_READ;
 	}
-	
+
 	if(evt.events & EPOLLOUT)
 	{
 		event_flags |= SOCKET_EVENT_ON_WRITE;
