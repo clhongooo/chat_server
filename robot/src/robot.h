@@ -15,8 +15,8 @@ public:
 	Robot();
 	~Robot() {}
 
-	int get_robot_id() { return robot_id_; }
-
+	int get_robot_id() { return robot_id_; }	
+	
 	bool Connect();
 	bool Close();
 

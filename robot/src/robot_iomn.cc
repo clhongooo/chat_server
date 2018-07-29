@@ -87,12 +87,10 @@ void DumpCreateRobot()
 	{
 		if(RobotMgr::Instance().CreateARobot())
 		{
-			printf("create %d robot success!\n", i);
 			iomn_print("create %d robot success!\n", i);
 		}
 		else
 		{
-			printf("create %d robot failed!\n", i);
 			iomn_print("create %d robot failed!\n", i);
 		}
 	}

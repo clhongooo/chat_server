@@ -34,10 +34,9 @@ bool TcpSvrSocket::Accept()
 	}
 	fprintf(stderr, "accepted...");
 
-	TcpSvrSocket tssock;
-	tssock.set_sock_fd(conn_fd);
-	tssock.set_sock_state(SS_CONNECTED);
-	shared_ptr<TcpSocket> sp_sock = make_shared<TcpSvrSocket>(tssock);
+	shared_ptr<TcpSocket> sp_sock = shared_ptr<TcpSocket>(new TcpSvrSocket);
+	sp_sock->set_sock_fd(conn_fd);
+	sp_sock->set_sock_state(SS_CONNECTED);
 	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
 	return true;
 }

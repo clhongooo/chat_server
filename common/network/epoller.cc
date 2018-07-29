@@ -55,6 +55,7 @@ bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 		}
 	}
 
+	printf("register successful, epoll_fd:%d, sock_fd:%d\n",epoll_fd_, sock_fd);
 	return true;
 }
 
@@ -104,6 +105,8 @@ bool Epoller::GetSocketEvent(int &sock_fd, int &event_flags)
 
 	epoll_event& evt = event_vec_[cur_evt_idx_];
 	cur_evt_idx_ += 1;
+
+	printf("event happends, epoll_fd:%d, sock_fd:%d, event:%d\n", epoll_fd_, evt.data.fd, evt.events);
 
 	sock_fd = evt.data.fd;
 	if(evt.events & (EPOLLERR | EPOLLRDHUP))

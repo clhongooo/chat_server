@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
 	LOG(INFO) << "robot server start";
 
-	// daemon(1, 1);
+	daemon(1, 1);
 
 	IomnStart(ROBOT_SVR_NAME, TopIomnMenu);
 

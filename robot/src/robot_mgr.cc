@@ -7,6 +7,7 @@
 
 #include<robot_mgr.h>
 #include<robot.h>
+#include<memory>
 
 static int count = 0;
 
@@ -18,10 +19,10 @@ RobotMgr& RobotMgr::Instance()
 
 bool RobotMgr::CreateARobot()
 {
-	Robot robot;
-	if(robot.Connect())
+	shared_ptr<Robot> sprobot = shared_ptr<Robot>(new Robot);
+	if(sprobot->Connect())
 	{
-		robots_map_[robot.get_robot_id()] = make_shared<Robot>(robot);
+		robots_map_[sprobot->get_robot_id()] = sprobot;
 		count++;
 		return true;
 	}
@@ -36,10 +37,10 @@ int RobotMgr::CreateRobots(int robots_num)
 	int count = 0;
 	for(int i = 0; i < robots_num; i++)
 	{
-		Robot robot;
-		if(robot.Connect())
+		shared_ptr<Robot> sprobot = shared_ptr<Robot>(new Robot);
+		if(sprobot->Connect())
 		{
-			robots_map_[robot.get_robot_id()] = make_shared<Robot>(robot);
+			robots_map_[sprobot->get_robot_id()] = sprobot;
 			count++;
 		}
 	}
@@ -60,6 +61,7 @@ void RobotMgr::CloseAllRobots()
 {
 	for(auto& item : robots_map_)
 	{
+		printf("close robot %d.\n",item.second->get_robot_id());
 		item.second->Close();
 	}
 	robots_map_.clear();

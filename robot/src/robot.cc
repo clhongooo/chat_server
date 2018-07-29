@@ -14,7 +14,7 @@ Robot::Robot()
 {
 	if(tcsock_.Create(SOCK_STREAM, 0) == false)
 	{
-		LOG(ERROR) << "init robot failed!";
+
 	}
 
 	robot_id_ = tcsock_.get_sock_fd();
@@ -33,19 +33,18 @@ bool Robot::Connect()
 		return false;
 	}
 
-	// fprintf(stderr, "robot connects to chat server failed!");
-	// LOG(ERROR) << "robot connects to chat server failed!";
 	return true;
 }
 
 bool Robot::Close()
 {
-	if(tcsock_.Shutdown(SHUT_WR))
+	if(tcsock_.Close())
 	{
+		printf("robot close ok!\n");
 		return true;
 	}
-
-	LOG(ERROR) << "robot[id:%d] close failed!" << robot_id_;
+	
+	printf("robot close failed!\n");
 	return false;
 }
 
