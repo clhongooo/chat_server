@@ -55,7 +55,6 @@ void SocketMgr::CheckSocketEvent()
 		return;
 	}
 
-	fprintf(stderr, "get_sock_evt()");
 	int sock_fd = 0, event_flags = 0;
 	while(epoller_.GetSocketEvent(sock_fd, event_flags))
 	{
@@ -119,10 +118,10 @@ void SocketMgr::ProcessAccept(TcpSvrSocket& ts)
 
 void SocketMgr::ProcessRead(TcpSocket& ts)
 {
-
+	ts.Read();
 }
 
 void SocketMgr::ProcessWrite(TcpSocket& ts)
 {
-
+	ts.Write();
 }

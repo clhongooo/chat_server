@@ -17,6 +17,14 @@ public:
 	TcpSocket(const TcpSocket& sock);
 	TcpSocket& operator=(const TcpSocket& sock);
 	virtual ~TcpSocket() {}
+
+	void Read();
+	void Write();
+	void SendData(char *data, int len);
+	virtual void OnRead(char *data, int len);
+
+protected:
+	void AllocBuffer(int sockfd);
 };
 
 #endif//TCP_SOCKET_H_

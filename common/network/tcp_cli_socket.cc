@@ -25,5 +25,6 @@ bool TcpCliSocket::Connect(const char* str_ip, port_t port)
 	}
 	fprintf(stderr, "connected\n");
 	set_sock_state(SS_CONNECTED);
+	AllocBuffer(get_sock_fd());
 	return true;
 }
