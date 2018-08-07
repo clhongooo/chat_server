@@ -6,7 +6,7 @@
  ************************************************************************/
 
 #include "client_conn.h"
-//#include "conn_mgr.h"
+#include "conn_mgr.h"
 
 ClientConn::ClientConn()
 {
@@ -22,7 +22,7 @@ void ClientConn::CloseClientConn()
 {
 	if(spt_sock_->Close())
 	{
-		//ConnMgr::Instance().RemoveConnsMap(client_id_);
+		ConnMgr::Instance().RemoveConnsMap(client_id_);
 	}
 }
 

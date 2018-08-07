@@ -44,7 +44,7 @@ void SocketMgr::CheckSocketEvent()
 		return;
 	}
 
-	int sock_fd = 0, event_flags = 0;
+	int event_flags = 0;
 	TcpSocket* tsock = NULL;
 	while(epoller_.GetSocketEvent(tsock, event_flags))
 	{
@@ -52,6 +52,7 @@ void SocketMgr::CheckSocketEvent()
 		{
 			continue;
 		}
+		
 		if(!tsock->IsValid() || tsock->get_sock_state() == SS_INVALID)
 		{
 			continue;

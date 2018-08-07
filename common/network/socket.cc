@@ -48,11 +48,9 @@ bool Socket::Close()
 {
 	if(close(sock_) != 0)
 	{
-		printf("close socket:%d failed\n", sock_);
 		return false;
 	}
 	state_ = SS_CLOSED;
-	printf("close socket:%d success.\n", sock_);
 	return true;
 }
 

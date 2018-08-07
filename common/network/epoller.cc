@@ -10,6 +10,7 @@
 #include<tcp_socket.h>
 #include<string.h>
 #include<socket_define.h>
+#include "tcp_svr_socket.h"
 
 Epoller::Epoller()
 	: epoll_fd_(epoll_create(1024))
@@ -30,8 +31,6 @@ bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 	struct epoll_event evt;
 	memset(&evt, 0, sizeof(evt));
 
-	int sock_fd = spsock->get_sock_fd();
-	evt.data.fd = sock_fd;
 	evt.events = EPOLLRDHUP;
 	evt.data.ptr = spsock.get();
 	if(event_flags & SOCKET_EVENT_ON_READ)
@@ -43,20 +42,19 @@ bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 		evt.events |= EPOLLOUT;
 	}
 
-	if(epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, sock_fd, &evt) == 0)
+	if(epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, spsock->get_sock_fd(), &evt) == 0)
 	{
 		return true;
 	}
 
 	if(errno == ENOENT)
 	{
-		if(epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, sock_fd, &evt) < 0)
+		if(epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, spsock->get_sock_fd(), &evt) < 0)
 		{
 			return false;
 		}
 	}
 
-	printf("register successful, epoll_fd:%d, sock_fd:%d\n",epoll_fd_, sock_fd);
 	return true;
 }
 
@@ -97,7 +95,7 @@ bool Epoller::WaitForEvent(int timeout)
 	return true;
 }
 
-bool Epoller::GetSocketEvent(TcpSocket* tsock, int &event_flags)
+bool Epoller::GetSocketEvent(TcpSocket* &tsock, int &event_flags)
 {
 	if(cur_evt_idx_ >= evt_num_)
 	{
@@ -127,5 +125,6 @@ bool Epoller::GetSocketEvent(TcpSocket* tsock, int &event_flags)
 	{
 		event_flags |= SOCKET_EVENT_ON_WRITE;
 	}
+
 	return true;
 }

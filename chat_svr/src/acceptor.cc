@@ -16,7 +16,7 @@
 #include <netinet/in.h>
 #include "socket_mgr.h"
 #include "client_conn.h"
-//#include "conn_mgr.h"
+#include "conn_mgr.h"
 
 Acceptor::Acceptor()
 {
@@ -42,7 +42,7 @@ void Acceptor::InitAcceptor()
 		
 		tssock->Listen(1000);
 	}
-	
+
 	SocketMgr::Instance().RegisterSocketEvent(sp_tsock_, SOCKET_EVENT_ON_READ);
 }
 
@@ -80,6 +80,6 @@ void Acceptor::CreateClientConn(int conn_fd)
 	SocketMgr::Instance().RegisterSocketEvent(sp_tsock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
 
 	sp_client_conn->set_spsock(sp_tsock);
-	
-	//ConnMgr::Instance().InsertConnsMap(sp_client_conn);
+
+	ConnMgr::Instance().InsertConnsMap(sp_client_conn);
 }
