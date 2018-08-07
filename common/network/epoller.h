@@ -28,7 +28,7 @@ public:
 
 	bool UnRegisterEvent(shared_ptr<TcpSocket>& spsock);
 	bool WaitForEvent(int timeout);
-	bool GetSocketEvent(int& sock_fd, int& event_flags);
+	bool GetSocketEvent(TcpSocket* tsock, int& event_flags);
 
 private:
 	int epoll_fd_;

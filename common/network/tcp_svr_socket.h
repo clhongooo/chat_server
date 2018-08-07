@@ -15,8 +15,14 @@ public:
 	TcpSvrSocket() {}
 	~TcpSvrSocket() {}
 
+	void set_accept_call_back(AcceptCallBack cb) { accept_cb_ = cb; }
+	AcceptCallBack get_accept_call_back() { return accept_cb_; }
+
 	bool Listen(int backlog);
-	bool Accept();
+	int Accept();
+
+private:
+	AcceptCallBack accept_cb_;
 };
 
 #endif//TCP_SVR_SOCKET_H_

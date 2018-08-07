@@ -22,21 +22,15 @@ bool TcpSvrSocket::Listen(int backlog)
 	return true;
 }
 
-bool TcpSvrSocket::Accept()
+int TcpSvrSocket::Accept()
 {
 	struct sockaddr_in addr;
 	socklen_t addr_len;
 	int conn_fd = accept(get_sock_fd(), (struct sockaddr*)&addr, &addr_len);
 	if(conn_fd == -1)
 	{
-		return false;
+		return -1;
 	}
 
-	shared_ptr<TcpSocket> sp_sock = shared_ptr<TcpSocket>(new TcpSvrSocket);
-	sp_sock->set_sock_fd(conn_fd);
-	sp_sock->set_sock_state(SS_CONNECTED);
-	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
-
-	AllocBuffer(conn_fd);
-	return true;
+	return conn_fd;
 }

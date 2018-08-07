@@ -33,6 +33,7 @@ bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 	int sock_fd = spsock->get_sock_fd();
 	evt.data.fd = sock_fd;
 	evt.events = EPOLLRDHUP;
+	evt.data.ptr = spsock.get();
 	if(event_flags & SOCKET_EVENT_ON_READ)
 	{
 		evt.events |= EPOLLIN;
@@ -96,7 +97,7 @@ bool Epoller::WaitForEvent(int timeout)
 	return true;
 }
 
-bool Epoller::GetSocketEvent(int &sock_fd, int &event_flags)
+bool Epoller::GetSocketEvent(TcpSocket* tsock, int &event_flags)
 {
 	if(cur_evt_idx_ >= evt_num_)
 	{
@@ -106,7 +107,12 @@ bool Epoller::GetSocketEvent(int &sock_fd, int &event_flags)
 	epoll_event& evt = event_vec_[cur_evt_idx_];
 	cur_evt_idx_ += 1;
 
-	sock_fd = evt.data.fd;
+	tsock = static_cast<TcpSocket*>(evt.data.ptr);
+	if(tsock == NULL)
+	{
+		return false;
+	}
+
 	if(evt.events & (EPOLLERR | EPOLLRDHUP))
 	{
 		event_flags |= SOCKET_EVENT_ON_EXCEPT;

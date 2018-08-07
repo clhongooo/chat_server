@@ -17,6 +17,11 @@ public:
 	TcpSocket(const TcpSocket& sock);
 	TcpSocket& operator=(const TcpSocket& sock);
 	virtual ~TcpSocket() {}
+	
+	void set_read_call_back(ReadCallBack cb) { read_cb_ = cb; }
+	ReadCallBack get_read_call_back() { return read_cb_; }
+	void set_write_call_back(WriteCallBack cb) { write_cb_ = cb; }
+	WriteCallBack get_write_call_back() { return write_cb_; }
 
 	void Read();
 	void Write();
@@ -25,6 +30,10 @@ public:
 
 protected:
 	void AllocBuffer(int sockfd);
+
+private:
+	ReadCallBack read_cb_;	
+	WriteCallBack write_cb_;
 };
 
 #endif//TCP_SOCKET_H_

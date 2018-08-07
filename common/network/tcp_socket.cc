@@ -52,6 +52,5 @@ void TcpSocket::Write()
 
 void TcpSocket::OnRead(char *data, int len)
 {
-	// receive data
-	printf("recevie data from %d, len = %d\n", get_sock_fd(), len);
+	read_cb_(data, len);
 }

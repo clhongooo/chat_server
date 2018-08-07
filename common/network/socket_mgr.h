@@ -22,8 +22,8 @@ public:
 
 	static SocketMgr& Instance();
 
-	void InsertTcpSocket(shared_ptr<TcpSocket>& tsock, int event_flags);
-	void RemoveTcpSocket(int sock_fd);
+	void RegisterSocketEvent(shared_ptr<TcpSocket>& sptsock, int event_flags);
+	void UnRegisterSocketEvent(shared_ptr<TcpSocket>& sptsock);
 
 	void Update();
 	void CheckSocketEvent();
@@ -35,7 +35,6 @@ private:
 	void ProcessWrite(TcpSocket& ts);
 
 private:
-	SocksMap socks_map_;
 	Epoller epoller_;
 };
 

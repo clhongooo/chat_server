@@ -12,6 +12,7 @@
 #include<memory>
 #include<vector>
 #include<sys/epoll.h>
+#include<functional>
 
 using namespace std;
 class TcpSocket;
@@ -54,4 +55,10 @@ enum SocketError
 typedef map<int, shared_ptr<TcpSocket>> SocksMap;
 
 typedef vector<epoll_event> EventVec;
+
+typedef function<void(char*, int)> ReadCallBack;
+typedef function<void()> WriteCallBack;
+typedef function<void()> CloseCallBack;
+typedef function<void()> AcceptCallBack;
+
 #endif//SOCKET_DEFINE_H_

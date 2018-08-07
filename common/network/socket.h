@@ -23,6 +23,8 @@ public:
 	ipaddr_t get_remote_ip() const { return remote_ip_; }
 	void set_remote_port(port_t port) { remote_port_ = port; }
 	port_t get_remote_port() const {return remote_port_; }
+	void set_close_call_back(CloseCallBack cb) { close_cb_ = cb; }
+	CloseCallBack get_close_call_back() { return close_cb_; }
 
 	bool IsValid() { return state_ != SS_INVALID; }
 	bool Create(int type, int protocol);
@@ -35,6 +37,7 @@ private:
 	int state_;
 	ipaddr_t remote_ip_;
 	port_t remote_port_;
+	CloseCallBack close_cb_;
 };
 
 #endif//SOCKET_H_
