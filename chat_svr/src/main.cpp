@@ -15,6 +15,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "acceptor.h"
 
 void ProcessSignal()
 {
@@ -36,20 +37,10 @@ int main(int argc, char* argv[])
 
 	ProcessSignal();
 
-	shared_ptr<TcpSocket> sp_sock = shared_ptr<TcpSocket>(new TcpSvrSocket);
-	sp_sock->Create(SOCK_STREAM, 0);
-	sp_sock->Bind(INADDR_ANY, 5000);
-	TcpSvrSocket* tssock = static_cast<TcpSvrSocket*>(sp_sock.get());
-	if(tssock)
-	{
-		tssock->Listen(5000);
-	}
+	Acceptor acceptor;
+	acceptor.InitAcceptor();
 
-	SocketMgr::Instance().InsertTcpSocket(sp_sock, SOCKET_EVENT_ON_READ);
-
-	cout << "listen socket:" << sp_sock->get_sock_fd() << endl;
-
-	// daemon(1, 1);
+	daemon(1, 1);
 
 	while(true)
 	{
