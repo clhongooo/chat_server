@@ -24,9 +24,9 @@ public:
 	 * \param event_flags a bit mask of socket event.
 	 * \return register successilly or not.
 	 */
-	bool RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags);
+	bool RegisterEvent(shared_ptr<TcpSocket> spsock, int event_flags);
 
-	bool UnRegisterEvent(shared_ptr<TcpSocket>& spsock);
+	bool UnRegisterEvent(shared_ptr<TcpSocket> spsock);
 	bool WaitForEvent(int timeout);
 	bool GetSocketEvent(TcpSocket* &tsock, int& event_flags);
 

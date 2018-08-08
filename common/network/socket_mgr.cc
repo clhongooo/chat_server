@@ -22,12 +22,12 @@ SocketMgr& SocketMgr::Instance()
 	return socket_mgr;
 }
 
-void SocketMgr::RegisterSocketEvent(shared_ptr<TcpSocket>& sptsock, int event_flags)
+void SocketMgr::RegisterSocketEvent(shared_ptr<TcpSocket> sptsock, int event_flags)
 {
 	epoller_.RegisterEvent(sptsock, event_flags);
 }
 
-void SocketMgr::UnRegisterSocketEvent(shared_ptr<TcpSocket>& sptsock)
+void SocketMgr::UnRegisterSocketEvent(shared_ptr<TcpSocket> sptsock)
 {
 	epoller_.UnRegisterEvent(sptsock);
 }

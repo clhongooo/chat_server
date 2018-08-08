@@ -69,17 +69,19 @@ void Acceptor::CreateClientConn(int conn_fd)
 	sp_client_conn->set_client_id(conn_fd);
 
 	shared_ptr<TcpSocket> sp_tsock = shared_ptr<TcpSocket>(new TcpSvrSocket);
+	sp_tsock->set_sock_fd(conn_fd);
+	sp_tsock->set_sock_state(SS_CONNECTED);
+	sp_client_conn->set_spsock(sp_tsock);
+
 	CloseCallBack close_cb = std::bind(&ClientConn::CloseClientConn, *(sp_client_conn.get()));
 	sp_tsock->set_close_call_back(close_cb);
 	using std::placeholders::_1;
 	using std::placeholders::_2;
 	ReadCallBack read_cb = std::bind(&ClientConn::ReadPackage, *(sp_client_conn.get()), _1, _2);
 	sp_tsock->set_read_call_back(read_cb);
-	sp_tsock->set_sock_fd(conn_fd);
-	sp_tsock->set_sock_state(SS_CONNECTED);
+
 	SocketMgr::Instance().RegisterSocketEvent(sp_tsock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
 
-	sp_client_conn->set_spsock(sp_tsock);
 
 	ConnMgr::Instance().InsertConnsMap(sp_client_conn);
 }

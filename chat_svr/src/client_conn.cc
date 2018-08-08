@@ -7,6 +7,7 @@
 
 #include "client_conn.h"
 #include "conn_mgr.h"
+#include <stdio.h>
 
 ClientConn::ClientConn()
 {
@@ -29,4 +30,12 @@ void ClientConn::CloseClientConn()
 void ClientConn::ReadPackage(char* data, int len)
 {
 	printf("\nread data:%s\n", data);
+}
+
+int ClientConn::DumpClientConnInfo(char* buffer, int buff_len)
+{
+	int len = 0;
+	len += snprintf(buffer+len, buff_len-len, "client id:%d,\t sock_fd:%d\n", client_id_, spt_sock_->get_sock_fd());
+	
+	return len;
 }
