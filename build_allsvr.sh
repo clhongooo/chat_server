@@ -14,8 +14,8 @@ cd robot/src
 blade build -pdebug
 cd ../..
 
-killall -9 chat_svr_debug
 killall -9 robot_svr_debug
+killall -9 chat_svr_debug
 
 cd chat_svr/bin
 ./chat_svr_debug -log_dir=../log
