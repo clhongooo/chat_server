@@ -204,7 +204,6 @@ static int handle_write_internal(int sockfd, struct buffer *pbuf)
   pbuf->writen = 0;
   pbuf->writer = pbuf->data + pbuf->read_max;
   pbuf->write_total = 0;
-  printf("\nsend successful!\n");
   return 0;
 
  fail:
