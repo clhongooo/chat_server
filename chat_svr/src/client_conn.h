@@ -26,6 +26,8 @@ public:
 	void CloseClientConn();
 	void ReadPackage(char* data, int len);
 
+	int DumpClientConnInfo(char* buffer, int buff_len);
+
 private:
 	shared_ptr<TcpSocket> spt_sock_;
 	int client_id_;

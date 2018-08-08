@@ -20,6 +20,15 @@ public:
 	void InsertConnsMap(shared_ptr<ClientConn> sp_cli_conn);
 	void RemoveConnsMap(int client_id);
 
+	template<typename Function>
+	void for_each_client(Function func)
+	{
+		for(auto& item : client_conns_map_)
+		{
+			func(item.second);
+		}
+	}
+
 private:
 	ClientConnsMap client_conns_map_;	
 };

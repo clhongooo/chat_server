@@ -16,6 +16,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "acceptor.h"
+#include "chat_define.h"
+#include "iomn.h"
+
+extern void TopIomnMenu();
 
 void ProcessSignal()
 {
@@ -41,6 +45,8 @@ int main(int argc, char* argv[])
 	acceptor.InitAcceptor();
 
 	daemon(1, 1);
+
+	IomnStart(CHAT_SVR_NAME, TopIomnMenu);
 
 	while(true)
 	{

@@ -21,7 +21,7 @@ Epoller::Epoller()
 
 }
 
-bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
+bool Epoller::RegisterEvent(shared_ptr<TcpSocket> spsock, int event_flags)
 {
 	if(!spsock->IsValid())
 	{
@@ -58,7 +58,7 @@ bool Epoller::RegisterEvent(shared_ptr<TcpSocket>& spsock, int event_flags)
 	return true;
 }
 
-bool Epoller::UnRegisterEvent(shared_ptr<TcpSocket>& spsock)
+bool Epoller::UnRegisterEvent(shared_ptr<TcpSocket> spsock)
 {
 	if(!spsock->IsValid())
 	{

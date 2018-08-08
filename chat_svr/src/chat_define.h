@@ -16,4 +16,6 @@ using namespace std;
 class ClientConn;
 typedef map<int, shared_ptr<ClientConn>> ClientConnsMap;
 
+#define CHAT_SVR_NAME "@iomn_chatsvr"
+
 #endif//CHAT_DEFINE_H_

@@ -22,8 +22,8 @@ public:
 
 	static SocketMgr& Instance();
 
-	void RegisterSocketEvent(shared_ptr<TcpSocket>& sptsock, int event_flags);
-	void UnRegisterSocketEvent(shared_ptr<TcpSocket>& sptsock);
+	void RegisterSocketEvent(shared_ptr<TcpSocket> sptsock, int event_flags);
+	void UnRegisterSocketEvent(shared_ptr<TcpSocket> sptsock);
 
 	void Update();
 	void CheckSocketEvent();
