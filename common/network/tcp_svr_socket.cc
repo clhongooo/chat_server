@@ -31,6 +31,7 @@ int TcpSvrSocket::Accept()
 	{
 		return -1;
 	}
-
+	
+	AllocBuffer(conn_fd);
 	return conn_fd;
 }

@@ -7,7 +7,8 @@
 #ifndef ROBOT_MGR_H_
 #define ROBOT_MGR_H_
 
-#include<robot_define.h>
+#include "robot_define.h"
+#include "robot.h"
 
 class RobotMgr
 {
@@ -32,7 +33,7 @@ public:
 			func(*(item.second.get()));
 		}
 	}
-
+	
 private:
 	RobotsMap robots_map_;
 };

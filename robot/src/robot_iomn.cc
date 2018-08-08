@@ -5,10 +5,12 @@
 	> Created Time: Thu 19 Jul 2018 05:27:05 PM CST
  ************************************************************************/
 
-#include<iomn.h>
-#include<stdlib.h>
-#include<robot_mgr.h>
-#include<robot.h>
+#include "iomn.h"
+#include <stdlib.h>
+#include "robot_mgr.h"
+#include "robot.h"
+#include <string.h>
+#include <arpa/inet.h>
 
 extern char* g_read_buff;
 extern char* g_dump_buff;
@@ -20,6 +22,7 @@ void DumpCreateRobot();
 void DumpCloseRobot();
 void DumpDisCloseRobot();
 void DumpRobotsInfo();
+void DumpRobotSendData();
 
 void PrintTopMenuHelp()
 {
@@ -28,6 +31,7 @@ void PrintTopMenuHelp()
 	iomn_push("d) disclose robot\n");
 	iomn_push("s) show robots\n");
 	iomn_push("r) close assigned robot\n");
+	iomn_push("n) send data to server\n");
 
 	iomn_push("q) Quit\n");
 	iomn_print("Input your select:\n");
@@ -63,6 +67,9 @@ void TopIomnMenu()
 				break;
 			case 'r':
 				DumpCloseRobot();
+				break;
+			case 'n':
+				DumpRobotSendData();
 				break;
 			default:
 				break;
@@ -150,4 +157,50 @@ void DumpRobotsInfo()
 	iomn_print("list of all robot information:\n");
 	tagPrintRobotInfo print_robot_info;
 	RobotMgr::Instance().for_each_robot(print_robot_info);
+}
+
+struct SndMsg
+{
+	int size;
+	char msg[32];
+};
+
+struct tagPrintRobotSendData
+{
+	tagPrintRobotSendData(int robot_id)
+	{
+		robot_id_ = robot_id;
+	}
+
+	int operator()(Robot& robot)
+	{
+		if(robot.get_robot_id() == robot_id_)
+		{
+			iomn_print("Input the sending data to chat server:\n");
+			char* cmd = iomn_gets(g_read_buff, g_buff_size);
+			if(cmd == NULL) return -1;
+
+			struct SndMsg snd_msg;
+			strcpy(snd_msg.msg, cmd);
+			int real_size = sizeof(int) + strlen(snd_msg.msg);
+			snd_msg.size = htonl(real_size);
+			robot.SendPackage((char*)&snd_msg, real_size);
+			iomn_print("robot->server:%s, data size:%d\n", cmd, real_size);
+		}
+		return 0;
+	}
+
+	int robot_id_;
+};
+
+void DumpRobotSendData()
+{
+	iomn_print("Input robot's id which to send data:\n");
+	char* cmd = iomn_gets(g_read_buff, g_buff_size);
+	if(cmd == NULL) return;
+
+	int robot_id = atoi(cmd);
+	if(robot_id < 0) return;
+	tagPrintRobotSendData print_robot_send_data(robot_id);
+	RobotMgr::Instance().for_each_robot(print_robot_send_data);
 }

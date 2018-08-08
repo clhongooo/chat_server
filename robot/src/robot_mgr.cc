@@ -26,9 +26,6 @@ bool RobotMgr::CreateARobot()
 		count++;
 		return true;
 	}
-	else {
-	    fprintf(stderr, "robot is not connect\n");
-	}
 	return false;
 }
 
@@ -61,7 +58,6 @@ void RobotMgr::CloseAllRobots()
 {
 	for(auto& item : robots_map_)
 	{
-		printf("close robot %d.\n",item.second->get_robot_id());
 		item.second->Close();
 	}
 	robots_map_.clear();

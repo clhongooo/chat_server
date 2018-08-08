@@ -18,12 +18,10 @@ bool TcpCliSocket::Connect(const char* str_ip, port_t port)
 	addr.sin_port = htons(port);
 	addr.sin_addr.s_addr = inet_addr(str_ip);
 
-	fprintf(stderr, "connecting.....");
 	if(connect(get_sock_fd(), (struct sockaddr*)&addr, sizeof(addr)) == -1)
 	{
 		return false;
 	}
-	fprintf(stderr, "connected\n");
 	set_sock_state(SS_CONNECTED);
 	AllocBuffer(get_sock_fd());
 	return true;

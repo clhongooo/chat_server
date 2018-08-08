@@ -178,8 +178,10 @@ int handle_read(int sockfd)
 
  fail:
   if ((n < 0) && (errno == EAGAIN || errno == EWOULDBLOCK))
+  {
+	  printf("\nerror happens!\n");
       return 0;
-
+  }
   printf("client %d: closed, n = %d\n, %s", sockfd, n, strerror(errno));
   close(sockfd);
   buf_free(sockfd);
@@ -202,6 +204,7 @@ static int handle_write_internal(int sockfd, struct buffer *pbuf)
   pbuf->writen = 0;
   pbuf->writer = pbuf->data + pbuf->read_max;
   pbuf->write_total = 0;
+  printf("\nsend successful!\n");
   return 0;
 
  fail:

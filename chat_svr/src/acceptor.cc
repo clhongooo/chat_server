@@ -82,6 +82,5 @@ void Acceptor::CreateClientConn(int conn_fd)
 
 	SocketMgr::Instance().RegisterSocketEvent(sp_tsock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
 
-
 	ConnMgr::Instance().InsertConnsMap(sp_client_conn);
 }

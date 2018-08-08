@@ -21,6 +21,7 @@ public:
 	bool Close();
 
 	int DumpRobotInfo(char* buffer, int buff_len);
+	void SendPackage(char* data, int len);
 
 private:
 	TcpCliSocket tcsock_;
