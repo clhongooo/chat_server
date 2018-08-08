@@ -37,7 +37,7 @@ void Acceptor::InitAcceptor()
 	TcpSvrSocket* tssock = static_cast<TcpSvrSocket*>(sp_tsock_.get());
 	if(tssock)
 	{
-		AcceptCallBack cb = std::bind(&Acceptor::Accept, *this);
+		AcceptCallBack cb = std::bind(&Acceptor::Accept, this);
 		tssock->set_accept_call_back(cb);
 		
 		tssock->Listen(1000);
@@ -73,11 +73,11 @@ void Acceptor::CreateClientConn(int conn_fd)
 	sp_tsock->set_sock_state(SS_CONNECTED);
 	sp_client_conn->set_spsock(sp_tsock);
 
-	CloseCallBack close_cb = std::bind(&ClientConn::CloseClientConn, *(sp_client_conn.get()));
+	CloseCallBack close_cb = std::bind(&ClientConn::CloseClientConn, sp_client_conn.get());
 	sp_tsock->set_close_call_back(close_cb);
 	using std::placeholders::_1;
 	using std::placeholders::_2;
-	ReadCallBack read_cb = std::bind(&ClientConn::ReadPackage, *(sp_client_conn.get()), _1, _2);
+	ReadCallBack read_cb = std::bind(&ClientConn::ReadPackage, sp_client_conn.get(), _1, _2);
 	sp_tsock->set_read_call_back(read_cb);
 
 	SocketMgr::Instance().RegisterSocketEvent(sp_tsock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
