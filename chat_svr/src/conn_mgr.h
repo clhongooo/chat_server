@@ -17,8 +17,8 @@ public:
 	
 	static ConnMgr& Instance();
 	
-	void InsertConnsMap(shared_ptr<ClientConn> sp_cli_conn);
-	void RemoveConnsMap(int client_id);
+	bool InsertConnsMap(shared_ptr<ClientConn> sp_cli_conn);
+	bool RemoveConnsMap(int client_id);
 
 	template<typename Function>
 	void for_each_client(Function func)

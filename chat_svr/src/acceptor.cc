@@ -17,6 +17,7 @@
 #include "socket_mgr.h"
 #include "client_conn.h"
 #include "conn_mgr.h"
+#include "logging.h"
 
 Acceptor::Acceptor()
 {
@@ -57,6 +58,7 @@ void Acceptor::Accept()
 	int conn_fd = tssock->Accept();
 	if(conn_fd == -1)
 	{
+		LOG(ERROR) << "listener accepts failly!";
 		return;
 	}
 
@@ -83,4 +85,6 @@ void Acceptor::CreateClientConn(int conn_fd)
 	SocketMgr::Instance().RegisterSocketEvent(sp_tsock, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
 
 	ConnMgr::Instance().InsertConnsMap(sp_client_conn);
+
+	LOG(INFO) << "create new client connect successfully! client id:" << sp_client_conn->get_client_id();
 }

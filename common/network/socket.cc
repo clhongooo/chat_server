@@ -5,12 +5,12 @@
 	> Created Time: Fri 06 Jul 2018 02:24:32 PM CST
  ************************************************************************/
 
-#include<socket.h>
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<arpa/inet.h>
-#include<unistd.h>
-#include<logging.h>
+#include <socket.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <string.h>
 
 Socket::Socket()
 	: sock_(INVALID_SOCKET)
@@ -46,8 +46,9 @@ bool Socket::Bind(ipaddr_t ip, port_t port)
 
 bool Socket::Close()
 {
-	if(close(sock_) != 0)
+	if(close(sock_) == -1)
 	{
+		printf("%s\n", strerror(errno));
 		return false;
 	}
 	state_ = SS_CLOSED;

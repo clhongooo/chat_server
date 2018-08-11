@@ -20,9 +20,9 @@ class TcpSocket;
 typedef unsigned long ipaddr_t;
 typedef unsigned short port_t;
 
-#define MAX_RCV_BUF_LEN 1024 * 1024
-#define MAX_SND_BUF_LEN 1024 * 1024
-#define MAX_PKG_LEN	256 * 1024
+#define MAX_RECV_BUF_LEN 1024
+#define MAX_SND_BUF_LEN 1024
+#define MAX_PKG_LEN	256
 
 #define INVALID_SOCKET -1
 

@@ -180,12 +180,7 @@ struct tagPrintRobotSendData
 			char* cmd = iomn_gets(g_read_buff, g_buff_size);
 			if(cmd == NULL) return -1;
 
-			struct SndMsg snd_msg;
-			strcpy(snd_msg.msg, cmd);
-			int real_size = sizeof(int) + strlen(snd_msg.msg);
-			snd_msg.size = htonl(real_size);
-			robot.SendPackage((char*)&snd_msg, real_size);
-			iomn_print("robot->server:%s, data size:%d\n", cmd, real_size);
+			robot.SendPackage(cmd, strlen(cmd));
 		}
 		return 0;
 	}

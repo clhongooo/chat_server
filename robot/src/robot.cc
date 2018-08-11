@@ -57,5 +57,5 @@ void Robot::SendPackage(char* data, int len)
 	{
 		return;
 	}
-	tcsock_.SendData(data, len);
+	tcsock_.SendPackage(data, len);
 }

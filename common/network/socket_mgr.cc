@@ -100,10 +100,10 @@ void SocketMgr::ProcessAccept(TcpSvrSocket& ts)
 
 void SocketMgr::ProcessRead(TcpSocket& ts)
 {
-	ts.Read();
+	ts.Receive();
 }
 
 void SocketMgr::ProcessWrite(TcpSocket& ts)
 {
-	ts.Write();
+	//ts.Write();
 }

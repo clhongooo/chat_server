@@ -8,6 +8,7 @@
 #include "client_conn.h"
 #include "conn_mgr.h"
 #include <stdio.h>
+#include "logging.h"
 
 ClientConn::ClientConn()
 {
@@ -25,11 +26,15 @@ void ClientConn::CloseClientConn()
 	{
 		ConnMgr::Instance().RemoveConnsMap(client_id_);
 	}
+	else
+	{
+		LOG(ERROR) << "connect closes failly!client id:" << client_id_;
+	}
 }
 
 void ClientConn::ReadPackage(char* data, int len)
 {
-	printf("\nread data:%s\n", data);
+	spt_sock_->RemoveRecvPkg(len);
 }
 
 int ClientConn::DumpClientConnInfo(char* buffer, int buff_len)

@@ -7,7 +7,6 @@ cc_library(
         'tcp_cli_socket.cc',
         'socket_mgr.cc',
         'epoller.cc',
-        'buffer.cc'
     ],
     incs = [
         '.',

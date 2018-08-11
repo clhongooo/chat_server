@@ -7,6 +7,7 @@
 
 #include "conn_mgr.h"
 #include "client_conn.h"
+#include "logging.h"
 
 ConnMgr::ConnMgr()
 {
@@ -24,22 +25,25 @@ ConnMgr& ConnMgr::Instance()
 	return inst;
 }
 
-void ConnMgr::InsertConnsMap(shared_ptr<ClientConn> sp_client_conn)
+bool ConnMgr::InsertConnsMap(shared_ptr<ClientConn> sp_client_conn)
 {
 	int client_id = sp_client_conn->get_client_id();
 	if(client_conns_map_.find(client_id) != client_conns_map_.end())
 	{
-		return;
+		return false;
 	}
-
+	
 	client_conns_map_[sp_client_conn->get_client_id()] = sp_client_conn;
+	return true;
 }
 
-void ConnMgr::RemoveConnsMap(int client_id)
+bool ConnMgr::RemoveConnsMap(int client_id)
 {
 	ClientConnsMap::iterator iter = client_conns_map_.find(client_id);
 	if(iter != client_conns_map_.end())
 	{
 		client_conns_map_.erase(iter);
+		return true;
 	}
+	return false;
 }

@@ -14,26 +14,29 @@ class TcpSocket : public Socket
 {
 public:
 	TcpSocket();
-	TcpSocket(const TcpSocket& sock);
-	TcpSocket& operator=(const TcpSocket& sock);
-	virtual ~TcpSocket() {}
+	virtual ~TcpSocket();
 	
 	void set_read_call_back(ReadCallBack cb) { read_cb_ = cb; }
 	ReadCallBack get_read_call_back() { return read_cb_; }
 	void set_write_call_back(WriteCallBack cb) { write_cb_ = cb; }
 	WriteCallBack get_write_call_back() { return write_cb_; }
 
-	void Read();
-	void Write();
-	void SendData(char *data, int len);
-	virtual void OnRead(char *data, int len);
-
-protected:
-	void AllocBuffer(int sockfd);
+	int SendPackage(char* data, int len);
+	int SendCache();
+	void AddSendCache(char* data, int len);
+	int Receive();
+	void RemoveRecvPkg(int pkg_len);
 
 private:
 	ReadCallBack read_cb_;	
 	WriteCallBack write_cb_;
+
+	char* send_buf_;
+	int cur_snd_idx_;
+	
+	char* recv_buf_;
+	int recv_start_;
+	int recv_bytes_;
 };
 
 #endif//TCP_SOCKET_H_
