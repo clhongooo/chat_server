@@ -9,11 +9,12 @@
 
 #include "robot_define.h"
 #include "robot.h"
+#include <sys/time.h>
 
 class RobotMgr
 {
 public:
-	RobotMgr() {}
+	RobotMgr();
 	~RobotMgr() {}
 
 	static RobotMgr& Instance();
@@ -33,9 +34,12 @@ public:
 			func(*(item.second.get()));
 		}
 	}
-	
+
+	void Update();
+
 private:
 	RobotsMap robots_map_;
+	struct timeval cur_tv_;
 };
 
 #endif//ROBOT_MGR_H_

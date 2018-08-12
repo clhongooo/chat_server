@@ -16,7 +16,8 @@ public:
 	~Robot() {}
 
 	int get_robot_id() { return robot_id_; }	
-	
+	TcpCliSocket& get_tsock() { return tcsock_; }
+
 	bool Connect();
 	bool Close();
 

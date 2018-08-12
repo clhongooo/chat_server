@@ -10,17 +10,27 @@
 Timer::Timer()
 {
 	sev_.sigev_notify = SIGEV_SIGNAL;
-	sev_.sigev_signo = SIG;
-	sev_.sigev_value.sival_ptr = &tid_;
-	timer_create(CLOCK_REALTIME, &sev, &tid_);	
+	sev_.sigev_signo = SIGRTMIN;
+	sev_.sigev_value.sival_ptr = this;
+	timer_create(CLOCK_REALTIME, &sev_, &tid_);	
 }
 
 void Timer::StartTimer(int micro_sec)
 {
-
+	struct itimerspec its;
+	its.it_value.tv_sec = micro_sec/1000;
+	its.it_value.tv_nsec = (micro_sec%1000)*1000000;
+	its.it_interval.tv_sec = its.it_value.tv_sec;
+	its.it_interval.tv_nsec = its.it_value.tv_nsec;
+	timer_settime(tid_, 0, &its, NULL);
 }
 
 void Timer::StopTimer()
 {
+	StartTimer(0);
+}
 
+void Timer::CancelTimer()
+{
+	timer_delete(tid_);
 }

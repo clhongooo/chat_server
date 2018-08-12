@@ -8,6 +8,7 @@
 #define CONN_MGR_H_
 
 #include "chat_define.h"
+#include <sys/time.h>
 
 class ConnMgr
 {
@@ -20,6 +21,8 @@ public:
 	bool InsertConnsMap(shared_ptr<ClientConn> sp_cli_conn);
 	bool RemoveConnsMap(int client_id);
 
+	void Update();
+
 	template<typename Function>
 	void for_each_client(Function func)
 	{
@@ -31,6 +34,7 @@ public:
 
 private:
 	ClientConnsMap client_conns_map_;	
+	struct timeval cur_tv_;
 };
 
 #endif//CONN_MGR_H_

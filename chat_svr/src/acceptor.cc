@@ -75,6 +75,8 @@ void Acceptor::CreateClientConn(int conn_fd)
 	sp_tsock->set_sock_state(SS_CONNECTED);
 	sp_client_conn->set_spsock(sp_tsock);
 
+	printf("\nclient conn sock fd:%d\n", sp_client_conn->get_spsock()->get_sock_fd());
+
 	CloseCallBack close_cb = std::bind(&ClientConn::CloseClientConn, sp_client_conn.get());
 	sp_tsock->set_close_call_back(close_cb);
 	using std::placeholders::_1;

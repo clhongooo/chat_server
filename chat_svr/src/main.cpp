@@ -18,6 +18,7 @@
 #include "acceptor.h"
 #include "chat_define.h"
 #include "iomn.h"
+#include "conn_mgr.h"
 
 extern void TopIomnMenu();
 
@@ -51,6 +52,7 @@ int main(int argc, char* argv[])
 	while(true)
 	{
 		SocketMgr::Instance().Update();
+		ConnMgr::Instance().Update();
 	}
 
 	return 0;

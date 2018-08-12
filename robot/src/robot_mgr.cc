@@ -9,7 +9,10 @@
 #include<robot.h>
 #include<memory>
 
-static int count = 0;
+RobotMgr::RobotMgr()
+{
+	gettimeofday(&cur_tv_, NULL);
+}
 
 RobotMgr& RobotMgr::Instance()
 {
@@ -23,7 +26,6 @@ bool RobotMgr::CreateARobot()
 	if(sprobot->Connect())
 	{
 		robots_map_[sprobot->get_robot_id()] = sprobot;
-		count++;
 		return true;
 	}
 	return false;
@@ -71,4 +73,27 @@ int RobotMgr::DumpRobotsInfo(char* buffer, int buff_len)
 		len += item.second->DumpRobotInfo(buffer+len, buff_len-len);
 	}
 	return len;
+}
+
+struct tagUpdateSendCache
+{
+	int operator()(Robot& robot)
+	{
+		robot.get_tsock().SendCache();
+		return 0;
+	}
+};
+
+void RobotMgr::Update()
+{
+	struct timeval now_tv;
+	gettimeofday(&now_tv, NULL);
+	int now_tv_msec = now_tv.tv_sec*1000 + now_tv.tv_usec/1000;
+	int last_tv_msec = cur_tv_.tv_sec*1000 + cur_tv_.tv_usec/1000;
+	
+	if(now_tv_msec - last_tv_msec >= 20)
+	{
+		tagUpdateSendCache tag_send_cache;
+		for_each_robot(tag_send_cache);
+	}
 }

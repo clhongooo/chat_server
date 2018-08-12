@@ -34,6 +34,7 @@ void ClientConn::CloseClientConn()
 
 void ClientConn::ReadPackage(char* data, int len)
 {
+	printf("\nread data:%s,len:%d\n", data, len);
 	spt_sock_->RemoveRecvPkg(len);
 }
 

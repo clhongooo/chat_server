@@ -64,6 +64,11 @@ int TcpSocket::SendPackage(char* data, int  len)
 
 int TcpSocket::SendCache()
 {
+	//printf("\nsend cache:%s,len:%d, sock id:%d....\n", send_buf_, cur_snd_idx_, get_sock_fd());
+	if(cur_snd_idx_ == 0)
+	{
+		return SERROR_SND_BUF_NULL;
+	}
 	int n = send(get_sock_fd(), send_buf_, cur_snd_idx_, 0);
 	if(n == -1)
 	{
@@ -79,7 +84,8 @@ void TcpSocket::AddSendCache(char* data, int len)
 	{
 		return;
 	}
-	memcpy(send_buf_, data, len);
+	memcpy(send_buf_ + cur_snd_idx_, data, len);
+	//printf("\nadd cache:%s,len:%d, send buf:%s, sock id:%d\n",data, len, send_buf_, get_sock_fd());
 	cur_snd_idx_ += len;
 }
 

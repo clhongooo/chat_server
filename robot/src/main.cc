@@ -5,11 +5,12 @@
 	> Created Time: 2018年07月20日 星期五 23时20分57秒
  ************************************************************************/
 
-#include<unistd.h>
-#include<iomn.h>
-#include<robot_define.h>
-#include<logging.h>
-#include<signal.h>
+#include <unistd.h>
+#include "iomn.h"
+#include "robot_define.h"
+#include "logging.h"
+#include <signal.h>
+#include "robot_mgr.h"
 
 extern void TopIomnMenu();
 
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
-		usleep(10);
+		RobotMgr::Instance().Update();
 	}
 	return 0;
 }
