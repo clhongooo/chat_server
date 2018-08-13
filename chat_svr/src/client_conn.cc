@@ -9,6 +9,7 @@
 #include "conn_mgr.h"
 #include <stdio.h>
 #include "logging.h"
+#include "socket_mgr.h"
 
 ClientConn::ClientConn()
 {
@@ -24,6 +25,7 @@ void ClientConn::CloseClientConn()
 {
 	if(spt_sock_->Close())
 	{
+		SocketMgr::Instance().UnRegisterSocketEvent(spt_sock_);
 		ConnMgr::Instance().RemoveConnsMap(client_id_);
 	}
 	else
@@ -36,6 +38,16 @@ void ClientConn::ReadPackage(char* data, int len)
 {
 	printf("\nread data:%s,len:%d\n", data, len);
 	spt_sock_->RemoveRecvPkg(len);
+}
+
+void ClientConn::SendPackage(char* data, int len)
+{
+	if(spt_sock_->IsValid() == false)
+	{
+		return;
+	}
+
+	spt_sock_->SendPackage(data, len);
 }
 
 int ClientConn::DumpClientConnInfo(char* buffer, int buff_len)

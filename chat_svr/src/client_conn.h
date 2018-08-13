@@ -25,6 +25,7 @@ public:
 
 	void CloseClientConn();
 	void ReadPackage(char* data, int len);
+	void SendPackage(char* data, int len);
 
 	int DumpClientConnInfo(char* buffer, int buff_len);
 

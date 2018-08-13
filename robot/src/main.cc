@@ -11,6 +11,7 @@
 #include "logging.h"
 #include <signal.h>
 #include "robot_mgr.h"
+#include "socket_mgr.h"
 
 extern void TopIomnMenu();
 
@@ -43,7 +44,7 @@ int main(int argc, char* argv[])
 	while(true)
 	{
 		RobotMgr::Instance().Update();
-		usleep(10);
+		SocketMgr::Instance().Update();
 	}
 	return 0;
 }

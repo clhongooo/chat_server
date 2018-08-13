@@ -5,39 +5,64 @@
 	> Created Time: Thu 19 Jul 2018 03:43:03 PM CST
  ************************************************************************/
 
-#include<robot.h>
-#include<logging.h>
-#include<robot_define.h>
-#include<sys/socket.h>
+#include "robot.h"
+#include "logging.h"
+#include "robot_define.h"
+#include "sys/socket.h"
+#include <memory>
+#include "socket_define.h"
+#include "socket_mgr.h"
+#include "tcp_cli_socket.h"
 
 Robot::Robot()
 {
-	if(tcsock_.Create(SOCK_STREAM, 0) == false)
+	spt_sock_ = shared_ptr<TcpSocket>(new TcpCliSocket);
+	if(spt_sock_->Create(SOCK_STREAM, 0) == false)
 	{
 
 	}
 
-	robot_id_ = tcsock_.get_sock_fd();
+	robot_id_ = spt_sock_->get_sock_fd();
 }
 
 bool Robot::Connect()
 {
-	if(!tcsock_.IsValid()) {
-		return false;
-	}
-
-	if(!tcsock_.Connect(CHAT_SVR_IP, CHAT_SVR_PORT))
+	if(spt_sock_->IsValid() == false) 
 	{
+		printf("\n11111111111\n");
 		return false;
 	}
 
+	TcpCliSocket* tc_sock = static_cast<TcpCliSocket*>(spt_sock_.get());
+	if(tc_sock == NULL)
+	{
+		printf("\n22222222222\n");
+		return false;
+	}
+
+	if(tc_sock->Connect(CHAT_SVR_IP, CHAT_SVR_PORT) == false)
+	{
+		printf("\n33333333333\n");
+		return false;
+	}
+
+	CloseCallBack close_cb = std::bind(&Robot::Close, this);
+	spt_sock_->set_close_call_back(close_cb);
+	using std::placeholders::_1;
+	using std::placeholders::_2;
+	ReadCallBack read_cb = std::bind(&Robot::ReadPackage, this, _1, _2);
+	spt_sock_->set_read_call_back(read_cb);
+	SocketMgr::Instance().RegisterSocketEvent(spt_sock_, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
+	
+	printf("\n4444444444444444444\n");
 	return true;
 }
 
 bool Robot::Close()
 {
-	if(tcsock_.Close())
+	if(spt_sock_->Close())
 	{
+		SocketMgr::Instance().UnRegisterSocketEvent(spt_sock_);
 		return true;
 	}
 	
@@ -53,9 +78,15 @@ int Robot::DumpRobotInfo(char* buffer, int buff_len)
 
 void Robot::SendPackage(char* data, int len)
 {
-	if(!tcsock_.IsValid())
+	if(!spt_sock_->IsValid())
 	{
 		return;
 	}
-	tcsock_.SendPackage(data, len);
+	spt_sock_->SendPackage(data, len);
+}
+
+void Robot::ReadPackage(char* data, int len)
+{
+	printf("\nread data:%s,len:%d\n", data, len);
+	spt_sock_->RemoveRecvPkg(len);
 }

@@ -7,7 +7,8 @@
 #ifndef ROBOT_H_
 #define ROBOT_H_
 
-#include<tcp_cli_socket.h>
+#include "tcp_socket.h"
+#include <memory>
 
 class Robot
 {
@@ -16,16 +17,17 @@ public:
 	~Robot() {}
 
 	int get_robot_id() { return robot_id_; }	
-	TcpCliSocket& get_tsock() { return tcsock_; }
+	shared_ptr<TcpSocket> get_tsock() { return spt_sock_; }
 
 	bool Connect();
 	bool Close();
 
 	int DumpRobotInfo(char* buffer, int buff_len);
 	void SendPackage(char* data, int len);
+	void ReadPackage(char* data, int len);
 
 private:
-	TcpCliSocket tcsock_;
+	shared_ptr<TcpSocket> spt_sock_;
 	int robot_id_;
 };
 

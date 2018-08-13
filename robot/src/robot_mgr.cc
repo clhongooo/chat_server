@@ -84,7 +84,7 @@ struct tagUpdateSendCache
 {
 	int operator()(Robot& robot)
 	{
-		robot.get_tsock().SendCache();
+		robot.get_tsock()->SendCache();
 		return 0;
 	}
 };

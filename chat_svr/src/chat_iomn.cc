@@ -9,6 +9,7 @@
 #include <memory>
 #include "client_conn.h"
 #include "conn_mgr.h"
+#include <string.h>
 
 extern char* g_read_buff;
 extern int g_buff_size;
@@ -17,6 +18,7 @@ extern char* g_dump_buff;
 void TopIomnMenu();
 void PrintTopMenuHelp();
 void DumpAllConnects();
+void DumpClientConnSendData();
 
 void TopIomnMenu()
 {
@@ -40,6 +42,9 @@ void TopIomnMenu()
 			case 's':
 				DumpAllConnects();
 				break;
+			case 'n':
+				DumpClientConnSendData();
+				break;
 			default:
 				break;
 		}
@@ -52,6 +57,7 @@ void PrintTopMenuHelp()
 {
 	iomn_push("Available Commands are:\n");
 	iomn_push("s) show connects\n");
+	iomn_push("n) send data to assign conn\n");
 
 	iomn_push("q) Quit\n");
 	iomn_print("Input your select:\n");
@@ -72,4 +78,35 @@ void DumpAllConnects()
 	iomn_print("list of all connects information:\n");
 	tagPrintClientConn tag_print_client_conn;
 	ConnMgr::Instance().for_each_client(tag_print_client_conn);
+}
+
+struct tagPrintConnSendData
+{
+	tagPrintConnSendData(int conn_id)
+	{
+		conn_id_ = conn_id;
+	}
+
+	int operator()(shared_ptr<ClientConn> conn)
+	{
+		iomn_print("Input the sending data to the peer robot:\n");
+		char* cmd = iomn_gets(g_read_buff, g_buff_size);
+		if(cmd == NULL) return -1;
+		
+		conn->SendPackage(cmd, strlen(cmd));
+		return 0;
+	}
+	int conn_id_;
+};
+
+void DumpClientConnSendData()
+{
+	iomn_print("Input conn's id which to send data:\n");
+	char* cmd = iomn_gets(g_read_buff, g_buff_size);
+	if(cmd == NULL) return;
+
+	int conn_id = atoi(cmd);
+	if(conn_id < 0) return;
+	tagPrintConnSendData print_conn_send_data(conn_id);
+	ConnMgr::Instance().for_each_client(print_conn_send_data);
 }
