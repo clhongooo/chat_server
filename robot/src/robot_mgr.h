@@ -29,9 +29,12 @@ public:
 	template<typename Funcation>
 	void for_each_robot(Funcation func)
 	{
-		for(auto& item : robots_map_)
+		for(auto item : robots_map_)
 		{
-			func(*(item.second.get()));
+			if(item.second.get())
+			{
+				func(*(item.second.get()));
+			}
 		}
 	}
 

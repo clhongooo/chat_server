@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
 	while(true)
 	{
 		RobotMgr::Instance().Update();
+		usleep(10);
 	}
 	return 0;
 }
