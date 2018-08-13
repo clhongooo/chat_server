@@ -10,6 +10,7 @@
 #include "robot_define.h"
 #include "robot.h"
 #include <sys/time.h>
+#include <mutex>
 
 class RobotMgr
 {
@@ -29,6 +30,7 @@ public:
 	template<typename Funcation>
 	void for_each_robot(Funcation func)
 	{
+		lock_guard<mutex> guard(robots_map_mutex_);
 		for(auto item : robots_map_)
 		{
 			if(item.second.get())
@@ -43,6 +45,7 @@ public:
 private:
 	RobotsMap robots_map_;
 	struct timeval cur_tv_;
+	mutex robots_map_mutex_;	
 };
 
 #endif//ROBOT_MGR_H_

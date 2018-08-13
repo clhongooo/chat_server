@@ -32,7 +32,8 @@ bool ConnMgr::InsertConnsMap(shared_ptr<ClientConn> sp_client_conn)
 	{
 		return false;
 	}
-	
+
+	lock_guard<mutex> guard(conns_map_mutex_);
 	client_conns_map_[sp_client_conn->get_client_id()] = sp_client_conn;
 	return true;
 }
@@ -42,6 +43,7 @@ bool ConnMgr::RemoveConnsMap(int client_id)
 	ClientConnsMap::iterator iter = client_conns_map_.find(client_id);
 	if(iter != client_conns_map_.end())
 	{
+		lock_guard<mutex> guard(conns_map_mutex_);
 		client_conns_map_.erase(iter);
 		return true;
 	}
