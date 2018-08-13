@@ -9,6 +9,7 @@
 
 #include "chat_define.h"
 #include <sys/time.h>
+#include <mutex>
 
 class ConnMgr
 {
@@ -26,6 +27,7 @@ public:
 	template<typename Function>
 	void for_each_client(Function func)
 	{
+		lock_guard<mutex> guard(conns_map_mutex_);
 		for(auto& item : client_conns_map_)
 		{
 			func(item.second);
@@ -35,6 +37,7 @@ public:
 private:
 	ClientConnsMap client_conns_map_;	
 	struct timeval cur_tv_;
+	mutex conns_map_mutex_;
 };
 
 #endif//CONN_MGR_H_

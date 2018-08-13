@@ -25,6 +25,7 @@ bool RobotMgr::CreateARobot()
 	shared_ptr<Robot> sprobot = shared_ptr<Robot>(new Robot);
 	if(sprobot->Connect())
 	{
+		lock_guard<mutex> guard(robots_map_mutex_);
 		robots_map_[sprobot->get_robot_id()] = sprobot;
 		return true;
 	}
@@ -39,6 +40,7 @@ int RobotMgr::CreateRobots(int robots_num)
 		shared_ptr<Robot> sprobot = shared_ptr<Robot>(new Robot);
 		if(sprobot->Connect())
 		{
+			lock_guard<mutex> guard(robots_map_mutex_);
 			robots_map_[sprobot->get_robot_id()] = sprobot;
 			count++;
 		}
@@ -50,8 +52,9 @@ void RobotMgr::CloseRobot(int robot_id)
 {
 	RobotsMap::iterator iter = robots_map_.find(robot_id);
 	if(iter != robots_map_.end())
-	{
+	{	
 		iter->second->Close();
+		lock_guard<mutex> guard(robots_map_mutex_);
 		robots_map_.erase(iter);
 	}
 }
@@ -62,6 +65,8 @@ void RobotMgr::CloseAllRobots()
 	{
 		item.second->Close();
 	}
+		
+	lock_guard<mutex> guard(robots_map_mutex_);
 	robots_map_.clear();
 }
 
