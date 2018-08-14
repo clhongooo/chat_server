@@ -6,9 +6,9 @@ cc_library(
     ],
     incs = [
         ".",
-        "../../thirdparty/protobuf/src",
+        "../../thirdparty/protobuf-3.6.x/src",
     ],
     deps = [
-        "//thirdparty/protobuf/src/google/protobuf:protobuf",
+        "//thirdparty/protobuf:protobuf",
     ],
 )

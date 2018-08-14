@@ -11,6 +11,9 @@
 #include "robot.h"
 #include <string.h>
 #include <arpa/inet.h>
+#include "msg_test.pb.h"
+#include "msg_head.h"
+#include "msg_wrapper.h"
 
 extern char* g_read_buff;
 extern char* g_dump_buff;
@@ -159,12 +162,6 @@ void DumpRobotsInfo()
 	RobotMgr::Instance().for_each_robot(print_robot_info);
 }
 
-struct SndMsg
-{
-	int size;
-	char msg[32];
-};
-
 struct tagPrintRobotSendData
 {
 	tagPrintRobotSendData(int robot_id)
@@ -179,7 +176,7 @@ struct tagPrintRobotSendData
 			iomn_print("Input the sending data to chat server:\n");
 			char* cmd = iomn_gets(g_read_buff, g_buff_size);
 			if(cmd == NULL) return -1;
-
+			
 			robot.SendPackage(cmd, strlen(cmd));
 		}
 		return 0;

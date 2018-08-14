@@ -25,3 +25,9 @@ int MsgWrapper::EncodeComMsg(char* buff, uint32 buff_len, uint32 msg_id, const P
 	return head_len + msg.ByteSize();
 }
 
+void MsgWrapper::DecodeComMsg(const char* buff, uint32 buff_len, PBMsg* msg)
+{
+	MsgHead msg_head;
+	int head_len = msg_head.UnPackFromBuffer(buff, buff_len);
+	msg->ParseFromArray(buff+head_len, buff_len-head_len);
+}

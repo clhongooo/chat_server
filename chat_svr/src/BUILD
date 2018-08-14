@@ -13,10 +13,14 @@ cc_binary(
         '../../thirdparty/glog/src',
         '../../common/network',
         '../../common/iomn',
+        '../../build64_release/proto',
+        '../../common/head',
     ],
     deps = [
         '//thirdparty/glog/src:glog',
         '//common/network:network',
         '//common/iomn:iomn',
+        '//proto:base_proto',
+        '//common/head:head',
     ],
 )

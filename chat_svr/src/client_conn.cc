@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include "logging.h"
 #include "socket_mgr.h"
+#include "msg_test.pb.h"
+#include "msg_wrapper.h"
 
 ClientConn::ClientConn()
 {
@@ -36,7 +38,7 @@ void ClientConn::CloseClientConn()
 
 void ClientConn::ReadPackage(char* data, int len)
 {
-	printf("\nread data:%s,len:%d\n", data, len);
+	printf("\nread data:%s,len:%d\n",data, len);
 	spt_sock_->RemoveRecvPkg(len);
 }
 

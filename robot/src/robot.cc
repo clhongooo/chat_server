@@ -13,7 +13,9 @@
 #include "socket_define.h"
 #include "socket_mgr.h"
 #include "tcp_cli_socket.h"
-
+#include "head_define.h"
+#include "msg_wrapper.h"
+#include "msg_test.pb.h"
 
 bool Robot::InitRobot()
 {
@@ -85,6 +87,6 @@ void Robot::SendPackage(char* data, int len)
 
 void Robot::ReadPackage(char* data, int len)
 {
-	printf("\nread data:%s,len:%d\n", data, len);
+	printf("read data:%s,len:%d\n", data, len);
 	spt_sock_->RemoveRecvPkg(len);
 }

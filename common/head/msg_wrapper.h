@@ -16,7 +16,8 @@ public:
 	MsgWrapper() {}
 	~MsgWrapper() {}
 
-	int EncodeComMsg(char* buff, uint32 buff_len, uint32 msg_id, const PBMsg& msg);
+	static int EncodeComMsg(char* buff, uint32 buff_len, uint32 msg_id, const PBMsg& msg);
+	static void DecodeComMsg(const char* buff, uint32 buff_len, PBMsg* msg);
 };
 
 #endif//MSG_WRAPPER_H_
