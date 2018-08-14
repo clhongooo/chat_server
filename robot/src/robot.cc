@@ -14,35 +14,34 @@
 #include "socket_mgr.h"
 #include "tcp_cli_socket.h"
 
-Robot::Robot()
+
+bool Robot::InitRobot()
 {
 	spt_sock_ = shared_ptr<TcpSocket>(new TcpCliSocket);
 	if(spt_sock_->Create(SOCK_STREAM, 0) == false)
 	{
-
+		return false;		
 	}
 
 	robot_id_ = spt_sock_->get_sock_fd();
+	return true;
 }
 
 bool Robot::Connect()
 {
 	if(spt_sock_->IsValid() == false) 
 	{
-		printf("\n11111111111\n");
 		return false;
 	}
 
 	TcpCliSocket* tc_sock = static_cast<TcpCliSocket*>(spt_sock_.get());
 	if(tc_sock == NULL)
 	{
-		printf("\n22222222222\n");
 		return false;
 	}
 
 	if(tc_sock->Connect(CHAT_SVR_IP, CHAT_SVR_PORT) == false)
 	{
-		printf("\n33333333333\n");
 		return false;
 	}
 
@@ -54,7 +53,6 @@ bool Robot::Connect()
 	spt_sock_->set_read_call_back(read_cb);
 	SocketMgr::Instance().RegisterSocketEvent(spt_sock_, SOCKET_EVENT_ON_READ | SOCKET_EVENT_ON_WRITE);
 	
-	printf("\n4444444444444444444\n");
 	return true;
 }
 

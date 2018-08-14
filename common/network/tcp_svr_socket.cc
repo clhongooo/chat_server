@@ -16,6 +16,7 @@ bool TcpSvrSocket::Listen(int backlog)
 {
 	if(listen(get_sock_fd(), backlog) == -1)
 	{
+		fprintf(stderr, "%s\n", strerror(errno));
 		return false;
 	}
 	set_sock_state(SS_LISTENING);
@@ -29,6 +30,7 @@ int TcpSvrSocket::Accept()
 	int conn_fd = accept(get_sock_fd(), (struct sockaddr*)&addr, &addr_len);
 	if(conn_fd == -1)
 	{
+		fprintf(stderr, "%s\n", strerror(errno));
 		return -1;
 	}
 	

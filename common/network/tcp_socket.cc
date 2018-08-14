@@ -64,7 +64,6 @@ int TcpSocket::SendPackage(char* data, int  len)
 
 int TcpSocket::SendCache()
 {
-	//printf("\nsend cache:%s,len:%d, sock id:%d....\n", send_buf_, cur_snd_idx_, get_sock_fd());
 	if(cur_snd_idx_ == 0)
 	{
 		return SERROR_SND_BUF_NULL;
@@ -72,6 +71,7 @@ int TcpSocket::SendCache()
 	int n = send(get_sock_fd(), send_buf_, cur_snd_idx_, 0);
 	if(n == -1)
 	{
+		fprintf(stderr, "%s\n", strerror(errno));
 		return SERROR_SND_FAILED;
 	}
 	cur_snd_idx_ = 0;
@@ -85,7 +85,6 @@ void TcpSocket::AddSendCache(char* data, int len)
 		return;
 	}
 	memcpy(send_buf_ + cur_snd_idx_, data, len);
-	//printf("\nadd cache:%s,len:%d, send buf:%s, sock id:%d\n",data, len, send_buf_, get_sock_fd());
 	cur_snd_idx_ += len;
 }
 
@@ -97,7 +96,11 @@ int TcpSocket::Receive()
 	}
 	
 	int n = recv(get_sock_fd(), recv_buf_ + recv_start_ + recv_bytes_, MAX_RECV_BUF_LEN - (recv_start_ + recv_bytes_), 0);
-	if(n > 0)
+	if(n < 0)
+	{
+		fprintf(stderr, "%s\n", strerror(errno));	
+	}
+	else
 	{
 		recv_bytes_ += n;
 	}

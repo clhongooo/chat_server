@@ -13,17 +13,26 @@
 #include "tcp_svr_socket.h"
 
 Epoller::Epoller()
-	: epoll_fd_(epoll_create(1024))
-	, event_vec_(INIT_EVENT_VEC_SIZE)
+	: event_vec_(INIT_EVENT_VEC_SIZE)
 	, evt_num_(0)
 	, cur_evt_idx_(0)
 {
 
 }
 
+bool Epoller::InitEpoller()
+{
+	epoll_fd_ = epoll_create(1024);
+	if(epoll_fd_ == -1)
+	{
+		return false;
+	}
+	return true;
+}
+
 bool Epoller::RegisterEvent(shared_ptr<TcpSocket> spsock, int event_flags)
 {
-	if(!spsock->IsValid())
+	if(spsock->IsValid() == false)
 	{
 		return false;
 	}

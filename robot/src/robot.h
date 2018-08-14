@@ -13,12 +13,13 @@
 class Robot
 {
 public:
-	Robot();
+	Robot() {}
 	~Robot() {}
 
 	int get_robot_id() { return robot_id_; }	
 	shared_ptr<TcpSocket> get_tsock() { return spt_sock_; }
 
+	bool InitRobot();
 	bool Connect();
 	bool Close();
 

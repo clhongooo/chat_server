@@ -42,6 +42,11 @@ int main(int argc, char* argv[])
 
 	ProcessSignal();
 
+	if(SocketMgr::Instance().InitSocketMgr() == false)
+	{
+		return -1;
+	}
+
 	Acceptor acceptor;
 	acceptor.InitAcceptor();
 

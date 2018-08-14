@@ -17,9 +17,11 @@ class TcpSvrSocket;
 class SocketMgr
 {
 public:
-	SocketMgr();
+	SocketMgr() {}
 	~SocketMgr() {}
 
+	bool InitSocketMgr();
+	
 	static SocketMgr& Instance();
 
 	void RegisterSocketEvent(shared_ptr<TcpSocket> sptsock, int event_flags);

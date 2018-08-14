@@ -11,9 +11,9 @@
 #include<tcp_svr_socket.h>
 #include<logging.h>
 
-SocketMgr::SocketMgr()
+bool SocketMgr::InitSocketMgr()
 {
-
+	return epoller_.InitEpoller();
 }
 
 SocketMgr& SocketMgr::Instance()

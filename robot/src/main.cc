@@ -35,7 +35,10 @@ int main(int argc, char* argv[])
 
 	ProcessSignal();
 
-	LOG(INFO) << "robot server start";
+	if(SocketMgr::Instance().InitSocketMgr() == false)
+	{
+		return -1;
+	}
 
 	daemon(1, 1);
 

@@ -5,11 +5,12 @@
 	> Created Time: Tue 10 Jul 2018 05:19:50 PM CST
  ************************************************************************/
 
-#include<tcp_cli_socket.h>
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<arpa/inet.h>
-#include<netinet/in.h>
+#include "tcp_cli_socket.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <string.h>
 
 bool TcpCliSocket::Connect(const char* str_ip, port_t port)
 {
@@ -20,6 +21,7 @@ bool TcpCliSocket::Connect(const char* str_ip, port_t port)
 
 	if(connect(get_sock_fd(), (struct sockaddr*)&addr, sizeof(addr)) == -1)
 	{
+		fprintf(stderr, "%s\n", strerror(errno));
 		return false;
 	}
 	set_sock_state(SS_CONNECTED);

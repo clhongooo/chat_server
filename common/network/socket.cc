@@ -26,6 +26,7 @@ bool Socket::Create(int type, int protocol)
 	int fd = socket(AF_INET, type, protocol);
 	if(fd == -1)
 	{
+		fprintf(stderr, "%s\n", strerror(errno));
 		return false;
 	}
 
@@ -48,7 +49,7 @@ bool Socket::Close()
 {
 	if(close(sock_) == -1)
 	{
-		printf("%s\n", strerror(errno));
+		fprintf(stderr, "%s\n", strerror(errno));
 		return false;
 	}
 	state_ = SS_CLOSED;
@@ -57,8 +58,9 @@ bool Socket::Close()
 
 bool Socket::Shutdown(int how)
 {
-	if(shutdown(sock_, how) != 0)
+	if(shutdown(sock_, how) == -1)
 	{
+		fprintf(stderr, "%s\n", strerror(errno));
 		return false;
 	}
 

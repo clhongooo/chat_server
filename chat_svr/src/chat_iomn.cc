@@ -89,6 +89,10 @@ struct tagPrintConnSendData
 
 	int operator()(shared_ptr<ClientConn> conn)
 	{
+		if(conn->get_client_id() != conn_id_)
+		{
+			return -1;
+		}
 		iomn_print("Input the sending data to the peer robot:\n");
 		char* cmd = iomn_gets(g_read_buff, g_buff_size);
 		if(cmd == NULL) return -1;

@@ -23,6 +23,10 @@ RobotMgr& RobotMgr::Instance()
 bool RobotMgr::CreateARobot()
 {
 	shared_ptr<Robot> sprobot = shared_ptr<Robot>(new Robot);
+	if(sprobot->InitRobot() == false)
+	{
+		return false;
+	}
 	if(sprobot->Connect())
 	{
 		lock_guard<mutex> guard(robots_map_mutex_);
@@ -38,6 +42,10 @@ int RobotMgr::CreateRobots(int robots_num)
 	for(int i = 0; i < robots_num; i++)
 	{
 		shared_ptr<Robot> sprobot = shared_ptr<Robot>(new Robot);
+		if(sprobot->InitRobot() == false)
+		{
+			continue;
+		}
 		if(sprobot->Connect())
 		{
 			lock_guard<mutex> guard(robots_map_mutex_);
