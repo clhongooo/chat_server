@@ -8,9 +8,11 @@ cc_binary(
     incs = [
         '../../common/config',
         '../../thirdparty/glog/src/glog',
+        '../../common/network',
     ],
     deps = [
         '//common/config:config',
         '//thirdparty/glog/src:glog',
+        '//common/network:network',
     ],
 )
