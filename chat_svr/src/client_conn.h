@@ -10,6 +10,8 @@
 #include <iostream>
 #include <memory>
 #include "tcp_socket.h"
+#include "base_type.h"
+#include "head_define.h"
 using namespace std;
 
 class ClientConn
@@ -25,7 +27,7 @@ public:
 
 	void CloseClientConn();
 	void ReadPackage(char* data, int len);
-	void SendPackage(char* data, int len);
+	void SendPackage(uint32 msg_id, const PBMsg& msg);
 
 	int DumpClientConnInfo(char* buffer, int buff_len);
 

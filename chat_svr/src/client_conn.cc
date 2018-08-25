@@ -38,18 +38,43 @@ void ClientConn::CloseClientConn()
 
 void ClientConn::ReadPackage(char* data, int len)
 {
-	printf("\nread data:%s,len:%d\n",data, len);
+	uint32 msg_id = 0;
+	int head_len = MsgWrapper::DecodeMsgHead(data, len, msg_id);
+	
+	switch(msg_id)
+	{
+		case Pb::CS_CMD_MSG_TEST:
+			{
+				Pb::CSMsgTest pkg;
+				pkg.ParseFromArray(data+head_len, len-head_len);
+				cout << pkg.param1() << " " << pkg.param2() << endl;
+			}
+			break;
+		case Pb::CS_CMD_REQ_ACCOUNT_REGISTER:
+			{
+				Pb::CSReqAccountRegister pkg;
+				pkg.ParseFromArray(data+head_len, len-head_len);
+				cout << pkg.user_name() << " " << pkg.user_pwd() << endl;
+			}
+			break;
+		default:
+			break;
+	}
+	
 	spt_sock_->RemoveRecvPkg(len);
 }
 
-void ClientConn::SendPackage(char* data, int len)
+void ClientConn::SendPackage(uint32 msg_id, const PBMsg& msg)
 {
 	if(spt_sock_->IsValid() == false)
 	{
 		return;
 	}
 
-	spt_sock_->SendPackage(data, len);
+	char* buffer = new char[10*1024];
+	int msg_len = MsgWrapper::EncodeComMsg(buffer, 10*1024, msg_id, msg);
+	spt_sock_->SendPackage(buffer, msg_len);
+	delete[] buffer;
 }
 
 int ClientConn::DumpClientConnInfo(char* buffer, int buff_len)

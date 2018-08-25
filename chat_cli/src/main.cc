@@ -10,7 +10,12 @@
 #include <unistd.h>
 #include "socket_mgr.h"
 #include "logging.h"
+#include "iomn.h"
 using namespace std;
+
+extern void TopIomnMenu();
+
+#define CHAT_CLI_NAME "@iomn_chatcli"
 
 int main(int argc, char* argv[])
 {
@@ -20,8 +25,7 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	ChatClient client;
-	if(client.InitChatClient(argc, argv) == false)
+	if(ChatClient::Instance().InitChatClient(argc, argv) == false)
 	{
 		LOG(ERROR) << "chat client init error!";
 		exit(EXIT_FAILURE);
@@ -29,9 +33,11 @@ int main(int argc, char* argv[])
 
 	daemon(1, 1);
 
+	IomnStart(CHAT_CLI_NAME, TopIomnMenu);
+
 	while(true)
 	{
-		client.Update();
+		ChatClient::Instance().Update();
 	}
 	return 0;
 }

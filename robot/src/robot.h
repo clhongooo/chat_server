@@ -9,6 +9,8 @@
 
 #include "tcp_socket.h"
 #include <memory>
+#include "head_define.h"
+#include "base_type.h"
 
 class Robot
 {
@@ -24,7 +26,7 @@ public:
 	bool Close();
 
 	int DumpRobotInfo(char* buffer, int buff_len);
-	void SendPackage(char* data, int len);
+	void SendPackage(uint32 msg_id, const PBMsg& msg);
 	void ReadPackage(char* data, int len);
 
 private:

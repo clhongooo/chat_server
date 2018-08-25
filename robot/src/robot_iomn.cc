@@ -91,7 +91,6 @@ void DumpCreateRobot()
 
 	int count = atoi(cmd);
 	if(count <= 0) return;
-	printf("count = %d\n", count);
 
 	for(int i = 0; i < count; i++)
 	{
@@ -115,6 +114,7 @@ struct tagPrintCloseRobot
 
 	int operator()(Robot& robot)
 	{
+		iomn_print("emmm  %d\n", robot.get_robot_id());
 		if(robot_id_ == robot.get_robot_id())
 		{
 			RobotMgr::Instance().CloseRobot(robot_id_);
@@ -177,7 +177,7 @@ struct tagPrintRobotSendData
 			char* cmd = iomn_gets(g_read_buff, g_buff_size);
 			if(cmd == NULL) return -1;
 			
-			robot.SendPackage(cmd, strlen(cmd));
+			//robot.SendPackage(cmd, strlen(cmd));
 		}
 		return 0;
 	}

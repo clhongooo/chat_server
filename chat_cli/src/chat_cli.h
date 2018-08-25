@@ -11,6 +11,8 @@
 #include "tcp_cli_socket.h"
 #include <memory>
 #include <sys/time.h>
+#include "base_type.h"
+#include "head_define.h"
 
 class ChatClient
 {
@@ -18,11 +20,14 @@ public:
 	ChatClient();
 	~ChatClient();
 
+	static ChatClient& Instance();
+
 	ChatCliCfg& get_chat_cli_cfg() { return chat_cli_cfg_; }
 	
 	bool InitChatClient(int argc, char** arg);
 	bool DisConnect();
 
+	void SendPackage(uint32 msg_id, const PBMsg& msg);
 	void ReadPackage(char* data, int len);
 	
 	void Update();

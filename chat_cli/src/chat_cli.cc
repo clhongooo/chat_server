@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include "socket_define.h"
 #include "socket_mgr.h"
+#include "msg_wrapper.h"
 
 namespace google
 {
@@ -25,6 +26,12 @@ ChatClient::ChatClient()
 ChatClient::~ChatClient()
 {
 
+}
+
+ChatClient& ChatClient::Instance()
+{
+	static ChatClient inst;
+	return inst;
 }
 
 bool ChatClient::InitChatClient(int argc, char** argv)
@@ -94,8 +101,30 @@ bool ChatClient::DisConnect()
 	return false;
 }
 
+void ChatClient::SendPackage(uint32 msg_id, const PBMsg& msg)
+{
+	if(!sp_tcsock_->IsValid())
+	{
+		return;
+	}
+
+	char* buffer = new char[10*1024];
+	int msg_len = MsgWrapper::EncodeComMsg(buffer, 10*1024, msg_id, msg);
+	sp_tcsock_->SendPackage(buffer, msg_len);
+	delete[] buffer;
+}
+
 void ChatClient::ReadPackage(char* data, int len)
 {
+	uint32 msg_id = 0;
+	//int head_len = MsgWrapper::DecodeMsgHead(data, len, msg_id);
+	
+	switch(msg_id)
+	{
+		default:
+			break;
+	}
+	
 	sp_tcsock_->RemoveRecvPkg(len);
 }
 

@@ -97,7 +97,7 @@ struct tagPrintConnSendData
 		char* cmd = iomn_gets(g_read_buff, g_buff_size);
 		if(cmd == NULL) return -1;
 		
-		conn->SendPackage(cmd, strlen(cmd));
+		//conn->SendPackage(cmd, strlen(cmd));
 		return 0;
 	}
 	int conn_id_;

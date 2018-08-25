@@ -16,6 +16,7 @@
 #include "head_define.h"
 #include "msg_wrapper.h"
 #include "msg_test.pb.h"
+#include "msg_head.h"
 
 bool Robot::InitRobot()
 {
@@ -72,21 +73,33 @@ bool Robot::Close()
 int Robot::DumpRobotInfo(char* buffer, int buff_len)
 {
 	int len = 0;
-	len += snprintf(buffer+len, buff_len-len, "robot id:%d\n", robot_id_);
+	len += snprintf(buffer+len, buff_len-len, "robot id:%d, robot socket fd:%d\n", robot_id_, spt_sock_->get_sock_fd());
 	return len;
 }
 
-void Robot::SendPackage(char* data, int len)
+void Robot::SendPackage(uint32 msg_id, const PBMsg& msg)
 {
 	if(!spt_sock_->IsValid())
 	{
 		return;
 	}
-	spt_sock_->SendPackage(data, len);
+
+	char* buffer = new char[10*1024];
+	int msg_len = MsgWrapper::EncodeComMsg(buffer, 10*1024, msg_id, msg);
+	spt_sock_->SendPackage(buffer, msg_len);
+	delete[] buffer;
 }
 
 void Robot::ReadPackage(char* data, int len)
 {
-	printf("read data:%s,len:%d\n", data, len);
+	uint32 msg_id = 0;
+	//int head_len = MsgWrapper::DecodeMsgHead(data, len, msg_id);
+	
+	switch(msg_id)
+	{
+		default:
+			break;
+	}
+	
 	spt_sock_->RemoveRecvPkg(len);
 }
