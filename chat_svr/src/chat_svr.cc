@@ -8,6 +8,7 @@
 #include "chat_svr.h"
 #include "logging.h"
 #include "socket_mgr.h"
+#include "conn_mgr.h"
 
 ChatSvr& ChatSvr::Instance()
 {
@@ -54,4 +55,10 @@ void ChatSvr::InitDatabase()
 	};
 
 	chat_db_ = create_database(paramc, (char**)(void*)params);
+}
+
+void ChatSvr::Update()
+{
+	SocketMgr::Instance().Update();
+	ConnMgr::Instance().Update();
 }

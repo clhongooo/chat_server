@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include "logging.h"
 #include "socket_mgr.h"
-#include "msg_test.pb.h"
+#include "account.pb.h"
 #include "msg_wrapper.h"
 
 #include "chat_svr.h"
@@ -92,8 +92,34 @@ void ClientConn::HandleAccountRegister(char* data, int len)
 		return;
 	}
 
-	AccountInfo account(pkg.user_name(), pkg.user_pwd());
-	transaction t(chat_db->begin());
-	chat_db->persist(account);
-	t.commit();
+	typedef odb::query<AccountInfo> query;
+	typedef odb::result<AccountInfo> result;
+
+	Pb::CSResAccountRegister msg;
+	msg.set_user_name(pkg.user_name());
+	msg.set_result(true);
+
+	//check account
+	{
+		transaction t(chat_db->begin());
+		result r (chat_db->query<AccountInfo> (query::user_name == pkg.user_name()));
+		if(r.empty() == false)
+		{
+			msg.set_result(false);
+		}
+		t.commit();
+	}
+
+	//insert account
+	{
+		if(msg.result())
+		{
+			AccountInfo account(pkg.user_name(), pkg.user_pwd());
+			transaction t(chat_db->begin());
+			chat_db->persist(account);
+			t.commit();
+		}
+	}
+
+	SendPackage(Pb::CS_CMD_RES_ACCOUNT_REGISTER, msg);
 }

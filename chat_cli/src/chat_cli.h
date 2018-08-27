@@ -32,6 +32,12 @@ public:
 	
 	void Update();
 
+	//send request protocol
+	void OnReqAccountRegister(const char* acc, const char* pwd);
+
+	//deal with response protocol
+	void OnResAccountRegister(char* data, int len);
+
 private:
 	ChatCliCfg chat_cli_cfg_;
 	shared_ptr<TcpSocket> sp_tcsock_;

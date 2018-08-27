@@ -11,6 +11,10 @@
 #include "socket_define.h"
 #include "socket_mgr.h"
 #include "msg_wrapper.h"
+#include "account.pb.h"
+#include "chat_cli_define.h"
+
+extern STWait stwait;
 
 namespace google
 {
@@ -50,6 +54,13 @@ bool ChatClient::InitChatClient(int argc, char** argv)
 	if(chat_cli_cfg_.ParseFile(argv[2]) == -1)
 	{
 		LOG(ERROR) << "parse config file error!";
+		return false;
+	}
+
+	//init socket manager
+	if(SocketMgr::Instance().InitSocketMgr() == false)
+	{
+		LOG(ERROR) << "socket manager init error!";
 		return false;
 	}
 
@@ -115,10 +126,13 @@ void ChatClient::SendPackage(uint32 msg_id, const PBMsg& msg)
 void ChatClient::ReadPackage(char* data, int len)
 {
 	uint32 msg_id = 0;
-	//int head_len = MsgWrapper::DecodeMsgHead(data, len, msg_id);
+	int head_len = MsgWrapper::DecodeMsgHead(data, len, msg_id);
 	
 	switch(msg_id)
 	{
+		case Pb::CS_CMD_RES_ACCOUNT_REGISTER:
+			OnResAccountRegister(data+head_len, len-head_len);
+			break;
 		default:
 			break;
 	}
@@ -136,5 +150,47 @@ void ChatClient::Update()
 	if(now_tv_msec - last_tv_msec >= 20)
 	{
 		sp_tcsock_->SendCache();
+	}
+
+	SocketMgr::Instance().Update();	
+}
+
+void ChatClient::OnReqAccountRegister(const char* acc, const char* pwd)
+{
+	if(stwait.wait == true)
+	{
+		LOG(ERROR) << "there is a request that has no response";
+		return;
+	}
+	Pb::CSReqAccountRegister pkg;
+	pkg.set_user_name(acc);
+	pkg.set_user_pwd(pwd);
+	SendPackage(Pb::CS_CMD_REQ_ACCOUNT_REGISTER, pkg);
+	
+	pthread_mutex_lock(&stwait.mutex);
+	stwait.wait = true;
+	pthread_mutex_unlock(&stwait.mutex);
+}
+
+void ChatClient::OnResAccountRegister(char* data, int len)
+{
+	Pb::CSResAccountRegister pkg;
+	pkg.ParseFromArray(data, len);
+
+	if(pkg.result())
+	{
+		cout << "resiter succeed!" << pkg.user_name().c_str() << endl;
+	}
+	else
+	{
+		cout << "resiter failed!" << pkg.user_name().c_str() << endl;
+	}
+
+	if(stwait.wait)
+	{
+		pthread_mutex_lock(&stwait.mutex);
+		stwait.wait = false;
+		pthread_cond_signal(&stwait.cond);
+		pthread_mutex_unlock(&stwait.mutex);
 	}
 }

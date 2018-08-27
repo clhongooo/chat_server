@@ -8,10 +8,11 @@
 #include "iomn.h"
 #include <string.h>
 #include "chat_cli.h"
-#include "msg_test.pb.h"
+#include "chat_cli_define.h"
 
 extern char* g_read_buff;
 extern int g_buff_size;
+extern STWait stwait;
 
 /*******************  declare function *********************/
 void TopIomnMenu();
@@ -91,6 +92,13 @@ void AccMgrMenuHelp()
 				break;
 		}
 
+		pthread_mutex_lock(&stwait.mutex);
+		while(stwait.wait)
+		{
+			pthread_cond_wait(&stwait.cond, &stwait.mutex);
+		}
+		pthread_mutex_unlock(&stwait.mutex);
+
 		PrintAccMgrMenuHelp();
 	}
 }
@@ -135,10 +143,7 @@ void DumpAccMgrRegisterInfo()
 		return;
 	}
 
-	Pb::CSReqAccountRegister pkg;
-	pkg.set_user_name(acc);
-	pkg.set_user_pwd(pwd);
-	ChatClient::Instance().SendPackage(Pb::CS_CMD_REQ_ACCOUNT_REGISTER, pkg);
+	ChatClient::Instance().OnReqAccountRegister(acc, pwd);
 }
 
 void DumpAccMgrLoginInfo()

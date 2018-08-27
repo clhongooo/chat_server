@@ -29,6 +29,7 @@ public:
 
 	bool InitChatSvr(const char* file_name);
 	void InitDatabase();
+	void Update();
 
 private:
 	Acceptor acceptor_;
