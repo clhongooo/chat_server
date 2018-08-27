@@ -31,6 +31,8 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	
+
 	daemon(1, 1);
 
 	IomnStart(CHAT_CLI_NAME, TopIomnMenu);

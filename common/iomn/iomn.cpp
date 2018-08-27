@@ -28,18 +28,18 @@ pthread_t IomnStart(const char * socket_name, void (* start_func)())
 
     if(g_start_func == NULL)
     {
-        printf("[ERROR] Invalid IOMN top menu function\n");
+        printf("\n[ERROR] Invalid IOMN top menu function\n");
         return -1;
     }
 
     int ret = pthread_create(&tid, NULL, IomnEntry, (void *)socket_name);
     if(ret == 0) 
     {
-        printf("==== IOMN Started Successful ====\n");
+        printf("\n==== IOMN Started Successful, Server Name:%s ====\n", socket_name);
         return tid;
     }
 
-    printf("++++ [ERROR] Start IOMN Thread Failed ++++\n");
+    printf("\n++++ [ERROR] Start IOMN Thread Failed ++++\n");
     return -1;
 }
 

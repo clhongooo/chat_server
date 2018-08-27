@@ -29,7 +29,7 @@ Acceptor::~Acceptor()
 	
 }
 
-void Acceptor::InitAcceptor()
+bool Acceptor::InitAcceptor()
 {
 	sp_tsock_ = shared_ptr<TcpSocket>(new TcpSvrSocket);
 	sp_tsock_->Create(SOCK_STREAM, 0);
@@ -41,10 +41,21 @@ void Acceptor::InitAcceptor()
 		AcceptCallBack cb = std::bind(&Acceptor::Accept, this);
 		tssock->set_accept_call_back(cb);
 		
-		tssock->Listen(1000);
+		if(tssock->Listen(1000) == false)
+		{
+			LOG(ERROR) << "chat server's acceptor listen error";
+			return false;
+		}
+	}
+	else
+	{
+		LOG(ERROR) << "server inner error";
+		return false;
 	}
 
 	SocketMgr::Instance().RegisterSocketEvent(sp_tsock_, SOCKET_EVENT_ON_READ);
+
+	return true;
 }
 
 void Acceptor::Accept()

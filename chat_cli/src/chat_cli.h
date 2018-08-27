@@ -23,7 +23,7 @@ public:
 	static ChatClient& Instance();
 
 	ChatCliCfg& get_chat_cli_cfg() { return chat_cli_cfg_; }
-	
+
 	bool InitChatClient(int argc, char** arg);
 	bool DisConnect();
 

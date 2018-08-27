@@ -6,6 +6,7 @@
  ************************************************************************/
 
 #include "chat_cli_cfg.h"
+#include "logging.h"
 
 ChatCliCfg::ChatCliCfg()
 	: svr_ip_("")
@@ -25,10 +26,12 @@ int ChatCliCfg::ParseFile(const char* file_name)
 	{
 		if(GetValueAsString("chat_svr_ip", svr_ip_) == false)
 		{
+			LOG(ERROR) << "parse file error! chat_svr_ip";
 			return -1;
 		}
 		if(GetValueAsInt("chat_svr_port", svr_port_) == false)
 		{
+			LOG(ERROR) << "parse file error! chat_svr_port";
 			return -1;
 		}
 		return 0;

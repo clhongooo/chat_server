@@ -18,7 +18,7 @@ public:
 	Acceptor();
 	~Acceptor();
 
-	void InitAcceptor();
+	bool InitAcceptor();
 	void Accept();
 	void CreateClientConn(int conn_fd);
 

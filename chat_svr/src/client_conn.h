@@ -29,8 +29,12 @@ public:
 	void ReadPackage(char* data, int len);
 	void SendPackage(uint32 msg_id, const PBMsg& msg);
 
+	//dump client information
 	int DumpClientConnInfo(char* buffer, int buff_len);
 
+	//deal with protocol
+	void HandleAccountRegister(char* data, int len);	
+	
 private:
 	shared_ptr<TcpSocket> spt_sock_;
 	int client_id_;

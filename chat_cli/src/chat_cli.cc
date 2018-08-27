@@ -52,7 +52,7 @@ bool ChatClient::InitChatClient(int argc, char** argv)
 		LOG(ERROR) << "parse config file error!";
 		return false;
 	}
-	
+
 	//init socket and connect to the server
 	if(sp_tcsock_->Create(SOCK_STREAM, 0) == false)
 	{
@@ -71,8 +71,6 @@ bool ChatClient::InitChatClient(int argc, char** argv)
 		return false;
 	}
 
-	cout << chat_cli_cfg_.get_svr_ip().c_str() << " " << chat_cli_cfg_.get_svr_port() << endl;
- 
 	if(tc_sock->Connect(chat_cli_cfg_.get_svr_ip().c_str(), chat_cli_cfg_.get_svr_port()) == false)
 	{
 		LOG(ERROR) << "connect to the server error!";

@@ -19,6 +19,7 @@
 #include "chat_define.h"
 #include "iomn.h"
 #include "conn_mgr.h"
+#include "chat_svr.h"
 
 extern void TopIomnMenu();
 
@@ -37,18 +38,21 @@ extern uint32 ParseCommandLineFlags(int* argc, char*** argv, bool remove_flags);
 
 int main(int argc, char* argv[])
 {
+	if(argc < 3)
+	{
+		LOG(ERROR) << "parameter error!" << argc;
+		return -1;
+	}
 	google::InitGoogleLogging(argv[0]);
 	google::ParseCommandLineFlags(&argc, &argv, true);
 
 	ProcessSignal();
 
-	if(SocketMgr::Instance().InitSocketMgr() == false)
+	if(ChatSvr::Instance().InitChatSvr(argv[1]) == false)
 	{
+		LOG(ERROR) << "init chat server error";
 		return -1;
 	}
-
-	Acceptor acceptor;
-	acceptor.InitAcceptor();
 
 	daemon(1, 1);
 

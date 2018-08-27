@@ -13,6 +13,11 @@
 #include "msg_test.pb.h"
 #include "msg_wrapper.h"
 
+#include "chat_svr.h"
+#include "account_info.hxx"
+#include "account_info-odb.hxx"
+using namespace odb::core;
+
 ClientConn::ClientConn()
 {
 
@@ -43,18 +48,9 @@ void ClientConn::ReadPackage(char* data, int len)
 	
 	switch(msg_id)
 	{
-		case Pb::CS_CMD_MSG_TEST:
-			{
-				Pb::CSMsgTest pkg;
-				pkg.ParseFromArray(data+head_len, len-head_len);
-				cout << pkg.param1() << " " << pkg.param2() << endl;
-			}
-			break;
 		case Pb::CS_CMD_REQ_ACCOUNT_REGISTER:
 			{
-				Pb::CSReqAccountRegister pkg;
-				pkg.ParseFromArray(data+head_len, len-head_len);
-				cout << pkg.user_name() << " " << pkg.user_pwd() << endl;
+				HandleAccountRegister(data+head_len, len-head_len);
 			}
 			break;
 		default:
@@ -83,4 +79,21 @@ int ClientConn::DumpClientConnInfo(char* buffer, int buff_len)
 	len += snprintf(buffer+len, buff_len-len, "client id:%d,\t sock_fd:%d\n", client_id_, spt_sock_->get_sock_fd());
 	
 	return len;
+}
+
+void ClientConn::HandleAccountRegister(char* data, int len)
+{
+	Pb::CSReqAccountRegister pkg;
+	pkg.ParseFromArray(data, len);
+
+	odb::database* chat_db = ChatSvr::Instance().get_chat_db();
+	if(chat_db == NULL)
+	{
+		return;
+	}
+
+	AccountInfo account(pkg.user_name(), pkg.user_pwd());
+	transaction t(chat_db->begin());
+	chat_db->persist(account);
+	t.commit();
 }

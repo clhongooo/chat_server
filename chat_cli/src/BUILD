@@ -7,6 +7,7 @@ cc_binary(
         'chat_cli_iomn.cc',
     ],
     incs = [
+        '.',
         '../../common/config',
         '../../thirdparty/glog/src/glog',
         '../../common/network',

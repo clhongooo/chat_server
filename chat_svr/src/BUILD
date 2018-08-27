@@ -1,14 +1,18 @@
 cc_binary(
     name = 'chat_svr',
     srcs = [
-        'main.cpp',
         'chat_iomn.cc',
         'acceptor.cc',
         'client_conn.cc',
         'conn_mgr.cc',
+        'account_info-odb.cxx',
+        'chat_svr_cfg.cc',
+        'chat_svr.cc',
+        'main.cpp',
     ],
     incs = [
         '.',
+        '../../common/config',
         '../../thirdparty/glog/src/glog',
         '../../thirdparty/glog/src',
         '../../common/network',
@@ -17,10 +21,13 @@ cc_binary(
         '../../common/head',
     ],
     deps = [
+        '//common/config:config',
         '//thirdparty/glog/src:glog',
         '//common/network:network',
         '//common/iomn:iomn',
         '//proto:base_proto',
         '//common/head:head',
+        '#odb',
+        '#odb-mysql',
     ],
 )

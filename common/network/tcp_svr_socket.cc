@@ -26,7 +26,7 @@ bool TcpSvrSocket::Listen(int backlog)
 int TcpSvrSocket::Accept()
 {
 	struct sockaddr_in addr;
-	socklen_t addr_len;
+	socklen_t addr_len = sizeof(addr);
 	int conn_fd = accept(get_sock_fd(), (struct sockaddr*)&addr, &addr_len);
 	if(conn_fd == -1)
 	{
