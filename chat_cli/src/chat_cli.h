@@ -34,9 +34,11 @@ public:
 
 	//send request protocol
 	void OnReqAccountRegister(const char* acc, const char* pwd);
+	void OnReqAccountLogin(const char* acc, const char* pwd);
 
 	//deal with response protocol
 	void OnResAccountRegister(char* data, int len);
+	void OnResAccountLogin(char* data, int len);
 
 private:
 	ChatCliCfg chat_cli_cfg_;

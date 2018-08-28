@@ -133,6 +133,9 @@ void ChatClient::ReadPackage(char* data, int len)
 		case Pb::CS_CMD_RES_ACCOUNT_REGISTER:
 			OnResAccountRegister(data+head_len, len-head_len);
 			break;
+		case Pb::CS_CMD_RES_ACCOUNT_LOGIN:
+			OnResAccountLogin(data+head_len, len-head_len);
+			break;
 		default:
 			break;
 	}
@@ -155,22 +158,33 @@ void ChatClient::Update()
 	SocketMgr::Instance().Update();	
 }
 
+/******************** send request ****************************************/
+
 void ChatClient::OnReqAccountRegister(const char* acc, const char* pwd)
 {
-	if(stwait.wait == true)
-	{
-		LOG(ERROR) << "there is a request that has no response";
-		return;
-	}
+	CHECK_WHEN_REQUEST;
+	
 	Pb::CSReqAccountRegister pkg;
 	pkg.set_user_name(acc);
 	pkg.set_user_pwd(pwd);
 	SendPackage(Pb::CS_CMD_REQ_ACCOUNT_REGISTER, pkg);
-	
-	pthread_mutex_lock(&stwait.mutex);
-	stwait.wait = true;
-	pthread_mutex_unlock(&stwait.mutex);
+
+	LOCK_WAIT;
 }
+
+void ChatClient::OnReqAccountLogin(const char* acc, const char* pwd)
+{
+	CHECK_WHEN_REQUEST;
+	
+	Pb::CSReqAccountLogin pkg;
+	pkg.set_user_name(acc);
+	pkg.set_user_pwd(pwd);
+	SendPackage(Pb::CS_CMD_REQ_ACCOUNT_LOGIN, pkg);
+
+	LOCK_WAIT;
+}
+
+/********************* deal with the response *****************************/
 
 void ChatClient::OnResAccountRegister(char* data, int len)
 {
@@ -179,18 +193,29 @@ void ChatClient::OnResAccountRegister(char* data, int len)
 
 	if(pkg.result())
 	{
-		cout << "resiter succeed!" << pkg.user_name().c_str() << endl;
+		cout << "register succeed!" << pkg.user_name().c_str() << endl;
 	}
 	else
 	{
-		cout << "resiter failed!" << pkg.user_name().c_str() << endl;
+		cout << "regsiter failed!" << pkg.user_name().c_str() << endl;
 	}
+	
+	UNLOCK_WAIT;
+}
 
-	if(stwait.wait)
+void ChatClient::OnResAccountLogin(char* data, int len)
+{
+	Pb::CSResAccountLogin pkg;
+	pkg.ParseFromArray(data, len);
+
+	if(pkg.result() == 0)
 	{
-		pthread_mutex_lock(&stwait.mutex);
-		stwait.wait = false;
-		pthread_cond_signal(&stwait.cond);
-		pthread_mutex_unlock(&stwait.mutex);
+		cout << "login succeed!" << pkg.user_name().c_str() << endl;
 	}
+	else
+	{
+		cout << "login failed!" << pkg.user_name().c_str() << " errno:" << pkg.result() << endl;
+	}
+	
+	UNLOCK_WAIT;
 }

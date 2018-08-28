@@ -92,12 +92,7 @@ void AccMgrMenuHelp()
 				break;
 		}
 
-		pthread_mutex_lock(&stwait.mutex);
-		while(stwait.wait)
-		{
-			pthread_cond_wait(&stwait.cond, &stwait.mutex);
-		}
-		pthread_mutex_unlock(&stwait.mutex);
+		BUSY_WAIT;
 
 		PrintAccMgrMenuHelp();
 	}
@@ -128,14 +123,14 @@ void DumpAccMgrRegisterInfo()
 	if(cmd == NULL) return;
 	char pwd[256] = {0};
 	cmd_len = strlen(cmd);
-	strncpy(pwd, cmd, cmd_len);
+	strncpy(pwd, cmd, cmd_len-1);
 
 	iomn_print("Input the confirmed password:\n");
 	cmd = iomn_gets(g_read_buff, g_buff_size);
 	if(cmd == NULL) return;
 	char repwd[256] = {0};
 	cmd_len = strlen(cmd);
-	strncpy(repwd, cmd, cmd_len);
+	strncpy(repwd, cmd, cmd_len-1);
 
 	if(strcmp(pwd, repwd) != 0)
 	{
@@ -148,5 +143,19 @@ void DumpAccMgrRegisterInfo()
 
 void DumpAccMgrLoginInfo()
 {
+	iomn_print("Input account:\n");
+	char* cmd = iomn_gets(g_read_buff, g_buff_size);
+	if(cmd == NULL) return;
+	char acc[256] = {0};
+	int cmd_len = strlen(cmd);
+	strncpy(acc, cmd, cmd_len-1);
 
+	iomn_print("Input password:\n");
+	cmd = iomn_gets(g_read_buff, g_buff_size);
+	if(cmd == NULL) return;
+	char pwd[256] = {0};
+	cmd_len = strlen(cmd);
+	strncpy(pwd, cmd, cmd_len-1);
+	
+	ChatClient::Instance().OnReqAccountLogin(acc, pwd);
 }

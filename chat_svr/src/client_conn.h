@@ -24,6 +24,7 @@ public:
 	int get_client_id() { return client_id_; }
 	void set_spsock(shared_ptr<TcpSocket> spsock) { spt_sock_ = spsock; }
 	shared_ptr<TcpSocket> get_spsock() { return spt_sock_; }
+	bool get_state() { return state_; }
 
 	void CloseClientConn();
 	void ReadPackage(char* data, int len);
@@ -34,10 +35,12 @@ public:
 
 	//deal with protocol
 	void HandleAccountRegister(char* data, int len);	
-	
+	void HandleAccountLogin(char* data, int len);
+
 private:
 	shared_ptr<TcpSocket> spt_sock_;
 	int client_id_;
+	bool state_;
 };
 
 #endif//CLIENT_H_
