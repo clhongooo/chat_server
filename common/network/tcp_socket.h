@@ -21,7 +21,7 @@ public:
 	void set_write_call_back(WriteCallBack cb) { write_cb_ = cb; }
 	WriteCallBack get_write_call_back() { return write_cb_; }
 
-	int SendPackage(char* data, int len);
+	int SendPackage(char* data, int len, bool flag = false);
 	int SendCache();
 	void AddSendCache(char* data, int len);
 	int Receive();

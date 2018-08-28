@@ -28,7 +28,7 @@ TcpSocket::~TcpSocket()
 	delete[] recv_buf_;
 }
 
-int TcpSocket::SendPackage(char* data, int  len)
+int TcpSocket::SendPackage(char* data, int  len, bool flag)
 {
 	if(IsValid() == false)
 	{
@@ -38,6 +38,12 @@ int TcpSocket::SendPackage(char* data, int  len)
 	if(len > MAX_PKG_LEN)
 	{
 		return SERROR_PKG_TOO_BIG;
+	}
+
+	if(flag)
+	{
+		send(get_sock_fd(), data, len, 0);
+		return SERROR_OK;
 	}
 
 	if(cur_snd_idx_ + len > MAX_SND_BUF_LEN)
