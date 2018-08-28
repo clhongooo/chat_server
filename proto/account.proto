@@ -1,0 +1,35 @@
+syntax="proto3";
+
+package Pb;
+
+enum MsgCmd
+{
+	CS_CMD_REQ_ACCOUNT_REGISTER =	0;
+	CS_CMD_RES_ACCOUNT_REGISTER	=	1;
+	CS_CMD_REQ_ACCOUNT_LOGIN	=	2;
+	CS_CMD_RES_ACCOUNT_LOGIN	=	3;
+}
+
+message CSReqAccountRegister
+{
+	bytes user_name	=	1;
+	bytes user_pwd	=	2;
+}
+
+message CSResAccountRegister
+{
+	bytes user_name =	1;
+	bool result	=	2;
+}
+
+message CSReqAccountLogin
+{
+	bytes user_name	=	1;
+	bytes user_pwd	=	2;;
+}
+
+message CSResAccountLogin
+{
+	bytes user_name	=	1;
+	int32 result	=	2;;
+}

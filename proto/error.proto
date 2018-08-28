@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package Pb;
+
+enum ErrorCode
+{
+	//common error code
+	ERROR_CODE_COMMON_SUCCESS	=	0;
+	ERROR_CODE_COMMON_FAILED	=	1;
+
+	//about account,100-199
+	ERROR_CODE_ACCOUNT_NOT_EXIST		=	100;	//the account is not exist.
+	ERROR_CODE_ACCOUNT_ALREADY_LOGIN	=	101;	//the account is already on login.	
+	ERROR_CODE_ACCOUNT_PASSWORD_FAIL	=	102;	//the password is failed.
+	ERROR_CODE_ACCOUNT_EXCEPTION		=	103;	//there are more than one accounts existed in server.
+}
