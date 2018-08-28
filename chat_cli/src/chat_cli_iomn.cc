@@ -23,6 +23,10 @@ void PrintAccMgrMenuHelp();
 void DumpAccMgrRegisterInfo();
 void DumpAccMgrLoginInfo();
 
+void AccOnlineMenuHelp();
+void PrintAccOnlineMenuHelp();
+
+
 /******************** implemention *************************/
 
 void TopIomnMenu()
@@ -59,7 +63,7 @@ void PrintTopMenuHelp()
 {
 	iomn_push("Available Commands are:\n");
 	iomn_push("l) login or register\n");
-
+	
 	iomn_push("q) Quit\n");
 	iomn_print("Input your select:\n");
 }
@@ -93,8 +97,15 @@ void AccMgrMenuHelp()
 		}
 
 		BUSY_WAIT;
-
-		PrintAccMgrMenuHelp();
+		
+		if(ChatClient::Instance().get_state() == false)
+		{
+			PrintAccMgrMenuHelp();
+		}
+		else
+		{
+			AccOnlineMenuHelp();
+		}
 	}
 }
 
@@ -158,4 +169,51 @@ void DumpAccMgrLoginInfo()
 	strncpy(pwd, cmd, cmd_len-1);
 	
 	ChatClient::Instance().OnReqAccountLogin(acc, pwd);
+}
+
+/****************** account online *************************************/
+void AccOnlineMenuHelp()
+{
+	PrintAccOnlineMenuHelp();
+	
+	while(true)
+	{
+		char* cmd = iomn_gets(g_read_buff, g_buff_size);
+		if(cmd == NULL) break;
+		
+		if(*cmd == 'q')
+		{
+			iomn_print("Back to upper menu!\n");
+			return;
+		}
+
+		switch(*cmd)
+		{
+			case 'o':
+				ChatClient::Instance().OnReqAccountLogout();
+				break;
+			default:
+				break;
+		}
+
+		BUSY_WAIT;
+		
+		if(ChatClient::Instance().get_state())
+		{
+			PrintAccOnlineMenuHelp();
+		}
+		else
+		{
+			AccMgrMenuHelp();
+		}
+	}
+}
+
+void PrintAccOnlineMenuHelp()
+{
+	iomn_push("Account Online Available Commands are:\n");
+	iomn_push("o) account logout\n");
+	iomn_push("q) Back to upper menu\n");
+	
+	iomn_print("Input your select:\n");
 }

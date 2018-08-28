@@ -22,8 +22,9 @@ namespace google
 }
 
 ChatClient::ChatClient()
+	: sp_tcsock_(shared_ptr<TcpSocket>(new TcpCliSocket))
+	, state_(false)
 {
-	sp_tcsock_ = shared_ptr<TcpSocket>(new TcpCliSocket);
 	gettimeofday(&cur_tv_, NULL);
 }
 
@@ -110,7 +111,7 @@ bool ChatClient::DisConnect()
 	return false;
 }
 
-void ChatClient::SendPackage(uint32 msg_id, const PBMsg& msg)
+void ChatClient::SendPackage(uint32 msg_id, const PBMsg& msg, bool flag)
 {
 	if(!sp_tcsock_->IsValid())
 	{
@@ -119,7 +120,7 @@ void ChatClient::SendPackage(uint32 msg_id, const PBMsg& msg)
 
 	char* buffer = new char[10*1024];
 	int msg_len = MsgWrapper::EncodeComMsg(buffer, 10*1024, msg_id, msg);
-	sp_tcsock_->SendPackage(buffer, msg_len);
+	sp_tcsock_->SendPackage(buffer, msg_len, flag);
 	delete[] buffer;
 }
 
@@ -135,6 +136,9 @@ void ChatClient::ReadPackage(char* data, int len)
 			break;
 		case Pb::CS_CMD_RES_ACCOUNT_LOGIN:
 			OnResAccountLogin(data+head_len, len-head_len);
+			break;
+		case Pb::CS_CMD_RES_ACCOUNT_LOGOUT:
+			OnResAccountLogout();
 			break;
 		default:
 			break;
@@ -184,6 +188,16 @@ void ChatClient::OnReqAccountLogin(const char* acc, const char* pwd)
 	LOCK_WAIT;
 }
 
+void ChatClient::OnReqAccountLogout()
+{
+	CHECK_WHEN_REQUEST;
+	
+	Pb::CSReqAccountLogout pkg;
+	SendPackage(Pb::CS_CMD_REQ_ACCOUNT_LOGOUT, pkg);
+
+	LOCK_WAIT;
+}
+
 /********************* deal with the response *****************************/
 
 void ChatClient::OnResAccountRegister(char* data, int len)
@@ -210,6 +224,7 @@ void ChatClient::OnResAccountLogin(char* data, int len)
 
 	if(pkg.result() == 0)
 	{
+		state_ = true;
 		cout << "login succeed!" << pkg.user_name().c_str() << endl;
 	}
 	else
@@ -217,5 +232,14 @@ void ChatClient::OnResAccountLogin(char* data, int len)
 		cout << "login failed!" << pkg.user_name().c_str() << " errno:" << pkg.result() << endl;
 	}
 	
+	UNLOCK_WAIT;
+}
+
+void ChatClient::OnResAccountLogout()
+{
+	state_ = false;
+	
+	DisConnect();
+	cout << "logout succeed!" << endl;
 	UNLOCK_WAIT;
 }
