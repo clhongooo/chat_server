@@ -98,14 +98,11 @@ void AccMgrMenuHelp()
 
 		BUSY_WAIT;
 		
-		if(ChatClient::Instance().get_state() == false)
-		{
-			PrintAccMgrMenuHelp();
-		}
-		else
+		if(ChatClient::Instance().get_state())
 		{
 			AccOnlineMenuHelp();
 		}
+		PrintAccMgrMenuHelp();
 	}
 }
 
@@ -204,7 +201,7 @@ void AccOnlineMenuHelp()
 		}
 		else
 		{
-			AccMgrMenuHelp();
+			return;
 		}
 	}
 }
