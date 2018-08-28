@@ -28,7 +28,7 @@ public:
 
 	void CloseClientConn();
 	void ReadPackage(char* data, int len);
-	void SendPackage(uint32 msg_id, const PBMsg& msg);
+	void SendPackage(uint32 msg_id, const PBMsg& msg, bool flag = false);
 
 	//dump client information
 	int DumpClientConnInfo(char* buffer, int buff_len);
@@ -36,6 +36,7 @@ public:
 	//deal with protocol
 	void HandleAccountRegister(char* data, int len);	
 	void HandleAccountLogin(char* data, int len);
+	void HandleAccountLogout(char* data, int len);
 
 private:
 	shared_ptr<TcpSocket> spt_sock_;

@@ -56,6 +56,9 @@ void ClientConn::ReadPackage(char* data, int len)
 		case Pb::CS_CMD_REQ_ACCOUNT_LOGIN:
 				HandleAccountLogin(data+head_len, len-head_len);
 			break;
+		case Pb::CS_CMD_REQ_ACCOUNT_LOGOUT:
+				HandleAccountLogout(data+head_len, len-head_len);
+			break;
 		default:
 			break;
 	}
@@ -63,7 +66,7 @@ void ClientConn::ReadPackage(char* data, int len)
 	spt_sock_->RemoveRecvPkg(len);
 }
 
-void ClientConn::SendPackage(uint32 msg_id, const PBMsg& msg)
+void ClientConn::SendPackage(uint32 msg_id, const PBMsg& msg, bool flag)
 {
 	if(spt_sock_->IsValid() == false)
 	{
@@ -72,7 +75,7 @@ void ClientConn::SendPackage(uint32 msg_id, const PBMsg& msg)
 
 	char* buffer = new char[10*1024];
 	int msg_len = MsgWrapper::EncodeComMsg(buffer, 10*1024, msg_id, msg);
-	spt_sock_->SendPackage(buffer, msg_len);
+	spt_sock_->SendPackage(buffer, msg_len, flag);
 	delete[] buffer;
 }
 
@@ -182,4 +185,10 @@ void ClientConn::HandleAccountLogin(char* data, int len)
 	}
 
 	SendPackage(Pb::CS_CMD_RES_ACCOUNT_LOGIN, msg);
+}
+
+void ClientConn::HandleAccountLogout(char* data, int len)
+{
+	Pb::CSResAccountLogout msg;
+	SendPackage(Pb::CS_CMD_RES_ACCOUNT_LOGOUT, msg);
 }
